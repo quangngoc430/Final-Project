@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ShoppingApplication",
+            "request": "launch",
+            "mainClass": "vn.edu.vnuk.shopping.ShoppingApplication",
+            "projectName": "shopping"
+        }
+    ]
+}
