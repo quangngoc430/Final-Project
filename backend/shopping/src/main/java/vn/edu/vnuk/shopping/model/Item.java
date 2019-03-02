@@ -30,8 +30,8 @@ public class Item {
     @Column(name = "CategoryID")
     private Long categoryId;
 
-    @Column(name = "ImageURL")
-    private String imageURL;
+    @Column(name = "ImageURLs")
+    private String imageURLs;
 
     @Column(name = "Description")
     private String description;
@@ -82,12 +82,12 @@ public class Item {
         this.categoryId = categoryId;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageURLs() {
+        return imageURLs;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageURLs(String imageURLs) {
+        this.imageURLs = imageURLs;
     }
 
     public String getDescription() {
