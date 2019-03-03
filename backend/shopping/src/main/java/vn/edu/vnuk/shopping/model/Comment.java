@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -26,6 +27,10 @@ public class Comment {
     @NotNull
     @Column(name = "AccountID")
     private Long accountId;
+
+    @NotEmpty
+    @Column(name = "Content")
+    private String content;
 
     @Column(name = "CreatedAt")
     private Date createdAt;
@@ -55,6 +60,14 @@ public class Comment {
 
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getCreatedAt() {

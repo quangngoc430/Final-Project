@@ -29,7 +29,7 @@ public class Account {
     private String password;
 
     @NotEmpty
-    @Column(name = "Password")
+    @Column(name = "Fullname")
     private String fullname;
 
     @NotNull
