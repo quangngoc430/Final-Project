@@ -32,11 +32,9 @@ public class OauthAccessToken {
     @Column(name = "AccountID")
     private Long accountId;
 
-    @NotNull
     @Column(name = "CreatedAt")
     private Date createdAt;
 
-    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 

@@ -26,11 +26,9 @@ public class OrderItem {
     @Column(name = "DiscountPriceID")
     private Long discountPriceId;
 
-    @NotNull
     @Column(name = "CreatedAt")
     private Date createdAt;
 
-    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 

@@ -36,11 +36,9 @@ public class Account {
     @Column(name = "RoleId")
     private Long roleId;
 
-    @NotNull
     @Column(name = "CreatedAt")
     private Date createdAt;
 
-    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 

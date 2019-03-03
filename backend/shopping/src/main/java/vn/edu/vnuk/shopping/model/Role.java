@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Role")
@@ -24,11 +23,9 @@ public class Role {
     @Column(name = "Name")
     private String name;
     
-    @NotNull
     @Column(name = "CreatedAt")
     private Date createdAt;
 
-    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 

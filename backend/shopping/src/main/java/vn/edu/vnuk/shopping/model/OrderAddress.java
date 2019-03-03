@@ -37,11 +37,9 @@ public class OrderAddress {
     @Column(name = "District")
     private String district;
 
-    @NotNull
     @Column(name = "CreatedAt")
     private Date createdAt;
 
-    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 

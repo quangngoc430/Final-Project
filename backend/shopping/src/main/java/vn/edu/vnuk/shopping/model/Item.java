@@ -23,6 +23,10 @@ public class Item {
     private Float realPrice;
 
     @NotNull
+    @Column(name = "DefaultPrice")
+    private Float defaultPrice;
+
+    @NotNull
     @Column(name = "Amount")
     private Long amount;
 
@@ -64,6 +68,14 @@ public class Item {
 
     public void setRealPrice(Float realPrice) {
         this.realPrice = realPrice;
+    }
+
+    public Float getDefaultPrice() {
+        return defaultPrice;
+    }
+
+    public void setDefaultPrice(Float defaultPrice) {
+        this.defaultPrice = defaultPrice;
     }
 
     public Long getAmount() {

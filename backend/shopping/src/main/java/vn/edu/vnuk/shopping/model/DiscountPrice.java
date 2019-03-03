@@ -28,10 +28,16 @@ public class DiscountPrice {
     private Long percent;
 
     @NotNull
+    @Column(name = "StartingTime")
+    private Date startingTime;
+
+    @NotNull
+    @Column(name = "EndingTime")
+    private Date endingTime;
+
     @Column(name = "CreatedAt")
     private Date createdAt;
 
-    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 
@@ -53,6 +59,22 @@ public class DiscountPrice {
 
     public Long getPercent() {
         return percent;
+    }
+
+    public void setStartingTime(Date startingTime) {
+        this.startingTime = startingTime;
+    }
+
+    public Date getStartingTime() {
+        return startingTime;
+    }
+
+    public void setEndingTime(Date endingTime) {
+        this.endingTime = endingTime;
+    }
+
+    public Date getEndingTime() {
+        return endingTime;
     }
 
     public void setPercent(Long percent) {

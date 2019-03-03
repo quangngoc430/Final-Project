@@ -31,11 +31,9 @@ public class Order {
     @Column(name = "Status")
     private Long status;
 
-    @NotNull
     @Column(name = "CreatedAt")
     private Date createdAt;
 
-    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 
