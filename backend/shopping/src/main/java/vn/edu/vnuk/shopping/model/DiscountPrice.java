@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-@Entity
+@Entity(name = "DiscountPrice")
 @Table(name = "DiscountPrice")
 public class DiscountPrice {
     

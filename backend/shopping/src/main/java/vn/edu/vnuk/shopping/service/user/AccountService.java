@@ -8,8 +8,6 @@ public interface AccountService {
 
     Account getOne(Long id);
 
-    Account getByEmail(String email);
-
     Account getByEmailAndPassword(String email, String password);
 
     Account update(Long id, Account account);

@@ -1,13 +1,12 @@
 package vn.edu.vnuk.shopping.model;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "OrderItem")
-public class OrderItem {
+@Table(name = "OrderHasItem")
+public class OrderHasItem {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -31,6 +30,15 @@ public class OrderItem {
 
     @Column(name = "UpdatedAt")
     private Date updatedAt;
+
+    @Transient
+    private Order order;
+
+    @Transient
+    private Item item;
+
+    @Transient
+    private DiscountPrice discountPrice;
 
     public Long getId() {
         return id;
@@ -78,5 +86,29 @@ public class OrderItem {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Order getOrder() {
+        return this.order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Item getItem() {
+        return this.item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public DiscountPrice getDiscountPrice() {
+        return this.discountPrice;
+    }
+
+    public void setDiscountPrice(DiscountPrice discountPrice) {
+        this.discountPrice = discountPrice;
     }
 }

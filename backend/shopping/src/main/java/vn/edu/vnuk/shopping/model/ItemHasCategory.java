@@ -9,28 +9,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Order")
-public class Order {
-    
+@Table(name = "Item_Has_Category")
+public class ItemHasCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
-    @NotNull
-    @Column(name = "OrderAddressID")
-    private Long orderAddressId;
+    @Column(name = "CategoryID")
+    private Long categoryId;
 
-    @NotNull
-    @Column(name = "AccountID")
-    private Long accountId;
-
-    @NotNull
-    @Column(name = "Status")
-    private Long status;
+    @Column(name = "ItemID")
+    private Long ItemId;
 
     @Column(name = "CreatedAt")
     private Date createdAt;
@@ -39,7 +32,10 @@ public class Order {
     private Date updatedAt;
 
     @Transient
-    private OrderAddress orderAddress;
+    private Item item;
+
+    @Transient
+    private Category category;
 
     public Long getId() {
         return id;
@@ -49,28 +45,20 @@ public class Order {
         this.id = id;
     }
 
-    public Long getOrderAddressId() {
-        return orderAddressId;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setOrderAddressId(Long orderAddressId) {
-        this.orderAddressId = orderAddressId;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public Long getItemId() {
+        return ItemId;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
-
-    public Long getStatus() {
-        return status;
-    }
-
-    public void setStatus(Long status) {
-        this.status = status;
+    public void setItemId(Long itemId) {
+        ItemId = itemId;
     }
 
     public Date getCreatedAt() {
@@ -89,11 +77,19 @@ public class Order {
         this.updatedAt = updatedAt;
     }
 
-    public OrderAddress getOrderAddress() {
-        return this.orderAddress;
+    public Item getItem() {
+        return item;
     }
 
-    public void setOrderAddress(OrderAddress orderAddress) {
-        this.orderAddress = orderAddress;
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

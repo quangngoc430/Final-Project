@@ -19,12 +19,8 @@ public class Item {
     private String name;
 
     @NotNull
-    @Column(name = "RealPrice")
-    private Float realPrice;
-
-    @NotNull
-    @Column(name = "DefaultPrice")
-    private Float defaultPrice;
+    @Column(name = "Price")
+    private Float price;
 
     @NotNull
     @Column(name = "Amount")
@@ -46,6 +42,9 @@ public class Item {
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 
+    @Transient
+    private Category category;
+
     public Long getId() {
         return id;
     }
@@ -62,20 +61,12 @@ public class Item {
         this.name = name;
     }
 
-    public Float getRealPrice() {
-        return realPrice;
+    public Float getPrice() {
+        return this.price;
     }
 
-    public void setRealPrice(Float realPrice) {
-        this.realPrice = realPrice;
-    }
-
-    public Float getDefaultPrice() {
-        return defaultPrice;
-    }
-
-    public void setDefaultPrice(Float defaultPrice) {
-        this.defaultPrice = defaultPrice;
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
     public Long getAmount() {
@@ -124,5 +115,13 @@ public class Item {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Category getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
