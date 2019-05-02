@@ -7,4 +7,6 @@ import vn.edu.vnuk.shopping.model.OauthAccessToken;
 
 @Repository
 public interface OauthAccessTokenRepository extends CrudRepository<OauthAccessToken, Long> {
+
+    OauthAccessToken getByAccessToken(String accessToken);
 }

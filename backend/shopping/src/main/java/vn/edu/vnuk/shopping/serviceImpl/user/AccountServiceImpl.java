@@ -1,11 +1,22 @@
 package vn.edu.vnuk.shopping.serviceImpl.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.edu.vnuk.shopping.define.Define;
+import vn.edu.vnuk.shopping.exception.AccountNotFoundException;
+import vn.edu.vnuk.shopping.exception.AccountPasswordIsIncorrectException;
+import vn.edu.vnuk.shopping.exception.AccountValidationException;
+import vn.edu.vnuk.shopping.exception.EmailIsExitException;
 import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.repository.AccountRepository;
 import vn.edu.vnuk.shopping.service.user.AccountService;
+import vn.edu.vnuk.shopping.validation.Account.AccountValidation;
+import vn.edu.vnuk.shopping.validation.Account.GroupCreateAccount;
+import vn.edu.vnuk.shopping.validation.Account.GroupUpdateAccount;
+import vn.edu.vnuk.shopping.validation.Account.GroupUpdateAccountPassword;
 
 import java.util.Date;
 import java.util.Optional;
@@ -19,55 +30,78 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AccountValidation accountValidation;
+
     @Override
-    public Account create(Account account) {
+    public Account create(Account account) throws EmailIsExitException, AccountValidationException {
         // validate
-        
+        accountValidation.validate(account, GroupCreateAccount.class);
+
         // check email is exist
-        // if (accountRepository.existByEmail(account.getEmail()))
-    
-        account.setFullname("abc");
-        account.setActive(0L);
+        if (accountRepository.existsByEmail(account.getEmail()))
+            throw new EmailIsExitException(account.getEmail());
+
+        account.setStatus(Define.STATUS_DEACTIVE_ACCOUNT);
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setRoleId(Define.ROLE_NORMAL_USER);
         account.setCreatedAt(new Date());
         account.setUpdatedAt(new Date());
-        account.setRoleId(1L);
+
         return accountRepository.save(account);
     }
 
     @Override
-    public Account getOne(Long id) {
+    public Page<Account> getAll(String keyword, Pageable pageable) {
+        Page<Account> accounts = accountRepository.getAllByKeyword(keyword, pageable);
+        return accounts;
+    }
+
+    @Override
+    public Account getOne(Long id) throws AccountNotFoundException {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
-        if (!accountOptional.isPresent()) {
-            // throw exception account not found
-        }
+        if (!accountOptional.isPresent())
+            throw new AccountNotFoundException(id);
 
         return accountOptional.get();
     }
 
     @Override
-    public Account getByEmailAndPassword(String email, String password) {
-        Account account = accountRepository.getAccountByEmail(email);
+    public Account update(Long id, Account account) throws AccountNotFoundException, AccountValidationException, AccountPasswordIsIncorrectException {
+        accountValidation.validate(account, GroupUpdateAccount.class);
 
-        if (account == null) {
-            // throw email not found
-        }
+        if (account.getPassword() != null || !account.getPassword().isEmpty()) accountValidation.validate(account, GroupUpdateAccountPassword.class);
 
-        if (!passwordEncoder.matches(password, account.getPassword())) {
-            // throw exception password is not true
-        }
+        Optional<Account> accountOptional = accountRepository.findById(id);
 
-        return account;
+        if (!accountOptional.isPresent()) throw new AccountNotFoundException(id);
+
+        Account oldAccount = accountOptional.get();
+        oldAccount.setFullname(account.getFullname());
+
+        if (account.getPassword() != null || !account.getPassword().isEmpty())
+            if (!passwordEncoder.matches(account.getPassword(), oldAccount.getPassword()))
+                throw new AccountPasswordIsIncorrectException(account.getPassword());
+            else
+                oldAccount.setPassword(passwordEncoder.encode(account.getNewPassword()));
+
+        oldAccount.setUpdatedAt(new Date());
+        accountRepository.save(oldAccount);
+
+        return accountRepository.save(oldAccount);
     }
 
     @Override
-    public Account update(Long id, Account account) {
+    public void delete(Long id) throws AccountNotFoundException {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
-        if (!accountOptional.isPresent()) {
-            // throw exception account not found
-        }
+        if (!accountOptional.isPresent())
+            throw new AccountNotFoundException(id);
 
-        return account;
+        Account account = accountOptional.get();
+        account.setStatus(Define.STATUS_DELETED_ACCOUNT);
+
+        accountRepository.save(account);
     }
 }

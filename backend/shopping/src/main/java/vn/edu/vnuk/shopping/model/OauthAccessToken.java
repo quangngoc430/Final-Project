@@ -1,13 +1,11 @@
 package vn.edu.vnuk.shopping.model;
 
-import java.sql.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.Date;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -27,6 +25,17 @@ public class OauthAccessToken {
     @NotNull
     @Column(name = "Expires")
     private Long expires;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty(value = "ExpiredAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull(message = "expired_at is not null")
+    @Column(name = "ExpiredAt")
+    private Date expiredAt;
+
+    @NotNull
+    @Column(name = "Status")
+    private Long Status;
 
     @NotNull
     @Column(name = "AccountID")
@@ -60,6 +69,22 @@ public class OauthAccessToken {
 
     public void setExpires(Long expires) {
         this.expires = expires;
+    }
+
+    public Date getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(Date expiredAt) {
+        this.expiredAt = expiredAt;
+    }
+
+    public Long getStatus() {
+        return Status;
+    }
+
+    public void setStatus(Long status) {
+        Status = status;
     }
 
     public Long getAccountId() {
