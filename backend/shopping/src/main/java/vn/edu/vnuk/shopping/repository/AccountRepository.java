@@ -14,7 +14,7 @@ public interface AccountRepository  extends CrudRepository<Account, Long> {
 
     void deleteByEmail(String email);
 
-    Account getAccountByEmail(String email);
+    Account getByEmail(String email);
 
     boolean existsByEmail(String email);
 

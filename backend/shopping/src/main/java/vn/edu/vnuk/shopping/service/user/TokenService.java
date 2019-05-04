@@ -1,9 +1,6 @@
 package vn.edu.vnuk.shopping.service.user;
 
-import vn.edu.vnuk.shopping.exception.AccountIsLockedException;
-import vn.edu.vnuk.shopping.exception.AccountValidationException;
-import vn.edu.vnuk.shopping.exception.EmailAndPasswordIsIncorrectException;
-import vn.edu.vnuk.shopping.exception.TokenNotFoundException;
+import vn.edu.vnuk.shopping.exception.*;
 import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.model.OauthAccessToken;
 
@@ -13,7 +10,7 @@ public interface TokenService {
 
     boolean isTokenExpired(OauthAccessToken oauthAccessToken);
 
-    OauthAccessToken get(String accessToken) throws TokenNotFoundException;
+    OauthAccessToken get(String accessToken) throws TokenNotFoundException, TokenIsExpiredException;
 
     void delete(String accessToken) throws TokenNotFoundException;
 }

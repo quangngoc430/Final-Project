@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "OauthAccessToken")
+@Table(name = "OAuthAccessToken")
 public class OauthAccessToken {
 
     @Id
@@ -40,6 +40,9 @@ public class OauthAccessToken {
     @NotNull
     @Column(name = "AccountID")
     private Long accountId;
+
+    @Transient
+    private Account account;
 
     @Column(name = "CreatedAt")
     private Date createdAt;
@@ -93,6 +96,14 @@ public class OauthAccessToken {
 
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
+    }
+
+    public Account getAccount() {
+        return this.account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Date getCreatedAt() {

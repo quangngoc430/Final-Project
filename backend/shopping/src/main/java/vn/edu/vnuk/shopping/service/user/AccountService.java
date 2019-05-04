@@ -2,6 +2,7 @@ package vn.edu.vnuk.shopping.service.user;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import vn.edu.vnuk.shopping.exception.AccountNotFoundException;
 import vn.edu.vnuk.shopping.exception.AccountPasswordIsIncorrectException;
 import vn.edu.vnuk.shopping.exception.AccountValidationException;
@@ -12,6 +13,7 @@ public interface AccountService {
 
     Account create(Account account) throws EmailIsExitException, AccountValidationException;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Page<Account> getAll(String keyword, Pageable pageable);
 
     Account getOne(Long id) throws AccountNotFoundException;
@@ -19,4 +21,9 @@ public interface AccountService {
     Account update(Long id, Account account) throws AccountNotFoundException, AccountValidationException, AccountPasswordIsIncorrectException;
 
     void delete(Long id) throws AccountNotFoundException;
+
+    Account getAccountLogin();
+
+    boolean isAccountLogin(long accountId);
+
 }

@@ -8,7 +8,6 @@ import vn.edu.vnuk.shopping.exception.*;
 import vn.edu.vnuk.shopping.model.ApiError;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.Instant;
 import java.util.HashMap;
 
 @ControllerAdvice
@@ -18,103 +17,88 @@ public class AccountExceptionHandler {
 
     @ExceptionHandler(value = AccountNotFoundException.class)
     public ResponseEntity<ApiError> handleAccountNotFoundException(HttpServletRequest request, Exception ex){
-
-        ApiError apiError = new ApiError();
-
-        apiError.setTimestamp(Instant.now());
-        apiError.setStatus(HttpStatus.NOT_FOUND.value());
         HashMap<String, String> errors = new HashMap<>();
         errors.put(MESSAGE, "Account not found");
-        apiError.setError(errors);
-        apiError.setPath(request.getRequestURI());
-        apiError.setMessage(ex.getMessage());
+
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(),
+                                        errors,
+                                        ex.getMessage(),
+                                        request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = AccountIsExistException.class)
     public ResponseEntity<ApiError> handleAccountIsExistException(HttpServletRequest request, Exception ex){
-        ApiError apiError = new ApiError();
-
-        apiError.setTimestamp(Instant.now());
-        apiError.setStatus(HttpStatus.CONFLICT.value());
         HashMap<String, String> errors = new HashMap<>();
         errors.put(MESSAGE, "Account is exist");
-        apiError.setError(errors);
-        apiError.setPath(request.getRequestURI());
-        apiError.setMessage(ex.getMessage());
+
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(),
+                                        errors,
+                                        ex.getMessage(),
+                                        request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = AccountValidationException.class)
     public ResponseEntity<ApiError> handleAccountValidationException(HttpServletRequest request, Exception ex){
-        ApiError apiError = new ApiError();
-
-        apiError.setTimestamp(Instant.now());
-        apiError.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
-        apiError.setError(((AccountValidationException) ex).getErrors());
-        apiError.setPath(request.getRequestURI());
-        apiError.setMessage(ex.getMessage());
+        ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE.value(),
+                                        ((AccountValidationException) ex).getErrors(),
+                                        ex.getMessage(),
+                                        request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(value = AccountPasswordIsIncorrectException.class)
     public ResponseEntity<ApiError> handleAccountPasswordNotEqualException(HttpServletRequest request, Exception ex){
-        ApiError apiError = new ApiError();
-
-        apiError.setTimestamp(Instant.now());
-        apiError.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
         HashMap<String, String> errors = new HashMap<>();
         errors.put(MESSAGE, "Two passwords do not match");
-        apiError.setError(errors);
-        apiError.setPath(request.getRequestURI());
-        apiError.setMessage(ex.getMessage());
+
+        ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE.value(),
+                                        errors,
+                                        ex.getMessage(),
+                                        request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(value = AccountInvalidException.class)
     public ResponseEntity<ApiError> handleAccountInvalidException(HttpServletRequest request, Exception ex){
-        ApiError apiError = new ApiError();
-
-        apiError.setTimestamp(Instant.now());
-        apiError.setStatus(HttpStatus.NOT_FOUND.value());
         HashMap<String, String> errors = new HashMap<>();
         errors.put(MESSAGE, "Invalid email or passowrd");
-        apiError.setError(errors);
-        apiError.setPath(request.getRequestURI());
-        apiError.setMessage(ex.getMessage());
+
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(),
+                                        errors,
+                                        ex.getMessage(),
+                                        request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = AccountInactiveException.class)
     public ResponseEntity<ApiError> handleAccountInactiveException(HttpServletRequest request, Exception ex) {
-        ApiError apiError = new ApiError();
-
-        apiError.setTimestamp(Instant.now());
-        apiError.setStatus(HttpStatus.FORBIDDEN.value());
         HashMap<String, String> errors = new HashMap<>();
         errors.put(MESSAGE, "Account is inactive");
-        apiError.setError(errors);
-        apiError.setPath(request.getRequestURI());
-        apiError.setMessage(ex.getMessage());
+
+        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN.value(),
+                                        errors,
+                                        ex.getMessage(),
+                                        request.getRequestURI());
+
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
 }
 
     @ExceptionHandler(value = AccountIsLockedException.class)
     public ResponseEntity<ApiError> handleAccountLockedException(HttpServletRequest request, Exception ex){
-        ApiError apiError = new ApiError();
-
-        apiError.setTimestamp(Instant.now());
-        apiError.setStatus(HttpStatus.LOCKED.value());
         HashMap<String, String> errors = new HashMap<>();
         errors.put(MESSAGE, "Account is locked");
-        apiError.setError(errors);
-        apiError.setPath(request.getRequestURI());
-        apiError.setMessage(ex.getMessage());
+
+        ApiError apiError = new ApiError(HttpStatus.LOCKED.value(),
+                                        errors,
+                                        ex.getMessage(),
+                                        request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.LOCKED);
     }

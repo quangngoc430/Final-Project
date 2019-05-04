@@ -42,7 +42,6 @@ public class Account implements Serializable {
     @Column(name = "Email")
     private String email;
 
-    @JsonView(View.Public.class)
     @NotEmpty(message = "password is not empty",
             groups = {GroupCreateAccount.class, GroupUpdateAccountPassword.class, GroupLoginAccount.class})
     @Pattern(regexp = "^[a-zA-Z0-9]+", message = "password have the wrong pattern",
@@ -180,4 +179,5 @@ public class Account implements Serializable {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
 }

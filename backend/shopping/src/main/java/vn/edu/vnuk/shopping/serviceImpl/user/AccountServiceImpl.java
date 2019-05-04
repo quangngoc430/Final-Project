@@ -3,6 +3,9 @@ package vn.edu.vnuk.shopping.serviceImpl.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.vnuk.shopping.define.Define;
@@ -53,11 +56,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Page<Account> getAll(String keyword, Pageable pageable) {
-        Page<Account> accounts = accountRepository.getAllByKeyword(keyword, pageable);
-        return accounts;
+        return accountRepository.getAllByKeyword(keyword, pageable);
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_NORMAL_USER')")
     public Account getOne(Long id) throws AccountNotFoundException {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
@@ -68,6 +71,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_NORMAL_USER') and (@accountServiceImpl.isAccountLogin(#id) == true))")
     public Account update(Long id, Account account) throws AccountNotFoundException, AccountValidationException, AccountPasswordIsIncorrectException {
         accountValidation.validate(account, GroupUpdateAccount.class);
 
@@ -92,7 +96,9 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.save(oldAccount);
     }
 
+
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(Long id) throws AccountNotFoundException {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
@@ -103,5 +109,17 @@ public class AccountServiceImpl implements AccountService {
         account.setStatus(Define.STATUS_DELETED_ACCOUNT);
 
         accountRepository.save(account);
+    }
+
+    @Override
+    public Account getAccountLogin() {
+        String email = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        return accountRepository.getByEmail(email);
+    }
+
+    @Override
+    public boolean isAccountLogin(long accountId) {
+        Account account = getAccountLogin();
+        return (account.getId() == accountId);
     }
 }

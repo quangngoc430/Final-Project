@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.vnuk.shopping.define.Define;
-import vn.edu.vnuk.shopping.exception.AccountIsLockedException;
-import vn.edu.vnuk.shopping.exception.AccountValidationException;
-import vn.edu.vnuk.shopping.exception.EmailAndPasswordIsIncorrectException;
-import vn.edu.vnuk.shopping.exception.TokenNotFoundException;
+import vn.edu.vnuk.shopping.exception.*;
 import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.model.OauthAccessToken;
 import vn.edu.vnuk.shopping.repository.AccountRepository;
@@ -17,6 +14,7 @@ import vn.edu.vnuk.shopping.service.user.TokenService;
 import vn.edu.vnuk.shopping.validation.Account.AccountValidation;
 import vn.edu.vnuk.shopping.validation.GroupLoginAccount;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 
 @Service
@@ -34,6 +32,7 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     private AccountValidation accountValidation;
 
+    @Transactional
     @Override
     public OauthAccessToken create(Account accountParam) throws EmailAndPasswordIsIncorrectException, AccountValidationException, AccountIsLockedException {
         accountValidation.validate(accountParam, GroupLoginAccount.class);
@@ -41,7 +40,7 @@ public class TokenServiceImpl implements TokenService {
         boolean isCorrect = true;
         String email = accountParam.getEmail(), password = accountParam.getPassword();
 
-        Account account = accountRepository.getAccountByEmail(email);
+        Account account = accountRepository.getByEmail(email);
 
         if (account == null) isCorrect = false;
 
@@ -58,7 +57,10 @@ public class TokenServiceImpl implements TokenService {
         oauthAccessToken.setStatus(Define.STATUS_CREATED_TOKEN);
         oauthAccessToken.setAccountId(account.getId());
 
-        return oauthAccessTokenRepository.save(oauthAccessToken);
+        oauthAccessToken = oauthAccessTokenRepository.save(oauthAccessToken);
+        oauthAccessToken.setAccount(accountRepository.findById(oauthAccessToken.getAccountId()).get());
+
+        return oauthAccessToken;
     }
 
     @Override
@@ -67,10 +69,12 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public OauthAccessToken get(String accessToken) throws TokenNotFoundException {
+    public OauthAccessToken get(String accessToken) throws TokenNotFoundException, TokenIsExpiredException {
         OauthAccessToken oauthAccessToken = oauthAccessTokenRepository.getByAccessToken(accessToken);
 
         if (oauthAccessToken == null) throw new TokenNotFoundException(accessToken);
+
+        if (isTokenExpired(oauthAccessToken)) throw new TokenIsExpiredException(accessToken);
 
         return oauthAccessToken;
     }

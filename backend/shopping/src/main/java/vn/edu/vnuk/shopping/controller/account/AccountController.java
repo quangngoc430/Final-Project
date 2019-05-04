@@ -8,19 +8,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.vnuk.shopping.exception.AccountNotFoundException;
-import vn.edu.vnuk.shopping.exception.AccountPasswordIsIncorrectException;
-import vn.edu.vnuk.shopping.exception.AccountValidationException;
-import vn.edu.vnuk.shopping.exception.EmailIsExitException;
+import vn.edu.vnuk.shopping.exception.*;
 import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.service.user.AccountService;
+import vn.edu.vnuk.shopping.service.user.CommonService;
 import vn.edu.vnuk.shopping.view.View;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private CommonService commonService;
 
     @JsonView(View.Public.class)
     @PostMapping(value = "/api/accounts", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -31,7 +34,11 @@ public class AccountController {
     @JsonView(View.Public.class)
     @GetMapping(value = "/api/accounts", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Page<Account>> getAll(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
-                                                Pageable pageable) {
+                                                @RequestParam(name = "accessToken", required = false, defaultValue = "") String accessToken,
+                                                HttpServletRequest request,
+                                                Pageable pageable) throws TokenNotFoundException, UnauthorizedException, TokenIsExpiredException, AccountNotFoundException {
+        commonService.authenticate(accessToken, request);
+
         return new ResponseEntity<>(accountService.getAll(keyword, pageable), HttpStatus.OK);
     }
 
@@ -44,12 +51,20 @@ public class AccountController {
     @JsonView(View.Public.class)
     @PutMapping(value = "/api/accounts/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id,
-                                    @RequestBody Account account) throws AccountNotFoundException, AccountValidationException, AccountPasswordIsIncorrectException {
+                                    @RequestParam(name = "accessToken", required = false, defaultValue = "") String accessToken,
+                                    HttpServletRequest request,
+                                    @RequestBody Account account) throws AccountNotFoundException, AccountValidationException, AccountPasswordIsIncorrectException, TokenNotFoundException, UnauthorizedException, TokenIsExpiredException {
+        commonService.authenticate(accessToken, request);
+
         return new ResponseEntity<>(accountService.update(id, account), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/api/accounts/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) throws AccountNotFoundException {
+    public ResponseEntity<?> delete(@PathVariable(name = "id") Long id,
+                                    @RequestParam(name = "accessToken", required = false, defaultValue = "") String accessToken,
+                                    HttpServletRequest request) throws AccountNotFoundException, TokenNotFoundException, UnauthorizedException, TokenIsExpiredException {
+        commonService.authenticate(accessToken,  request);
+
         accountService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

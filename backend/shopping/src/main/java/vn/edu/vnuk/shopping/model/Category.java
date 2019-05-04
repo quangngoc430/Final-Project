@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
 
 @Entity
 @Table(name = "Category")
@@ -19,13 +21,15 @@ public class Category {
     @Column(name = "ID")
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(groups = {Default.class})
     @Column(name = "Name")
     private String name;
 
+    @NotNull
     @Column(name = "CreatedAt")
     private Date createdAt;
-  
+
+    @NotNull
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 
