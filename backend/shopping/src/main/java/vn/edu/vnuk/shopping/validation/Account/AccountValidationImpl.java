@@ -1,7 +1,7 @@
 package vn.edu.vnuk.shopping.validation.Account;
 
 import org.springframework.stereotype.Component;
-import vn.edu.vnuk.shopping.exception.AccountValidationException;
+import vn.edu.vnuk.shopping.exception.account.AccountValidationException;
 import vn.edu.vnuk.shopping.model.Account;
 
 import javax.validation.*;
@@ -27,8 +27,8 @@ public class AccountValidationImpl implements AccountValidation {
         HashMap<String, String> errors = new HashMap<>();
 
         if(!constraintViolations.isEmpty()){
-            for(ConstraintViolation<Account> commentConstraintViolation : constraintViolations){
-                errors.put(commentConstraintViolation.getPropertyPath().toString(), commentConstraintViolation.getMessage());
+            for(ConstraintViolation<Account> accountConstraintViolation : constraintViolations){
+                errors.put(accountConstraintViolation.getPropertyPath().toString(), accountConstraintViolation.getMessage());
             }
 
             throw new AccountValidationException(constraintViolations.size(), errors);

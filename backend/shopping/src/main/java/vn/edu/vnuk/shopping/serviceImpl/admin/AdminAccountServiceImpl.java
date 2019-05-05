@@ -1,10 +1,16 @@
 package vn.edu.vnuk.shopping.serviceImpl.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import vn.edu.vnuk.shopping.define.Define;
+import vn.edu.vnuk.shopping.exception.account.AccountNotFoundException;
+import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.repository.AccountRepository;
 import vn.edu.vnuk.shopping.service.admin.AdminAccountService;
+
+import java.util.Optional;
 
 @Service
 public class AdminAccountServiceImpl implements AdminAccountService {
@@ -13,13 +19,17 @@ public class AdminAccountServiceImpl implements AdminAccountService {
     private AccountRepository accountRepository;
 
     @Override
-    public void deleteByEmail(String email) {
-        accountRepository.deleteByEmail(email);
-    }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void delete(Long id) throws AccountNotFoundException {
+        Optional<Account> accountOptional = accountRepository.findById(id);
 
-    @Override
-    public void deleteByID(Long id) {
-        accountRepository.deleteById(id);
+        if (!accountOptional.isPresent())
+            throw new AccountNotFoundException(id);
+
+        Account account = accountOptional.get();
+        account.setStatus(Define.STATUS_DELETED_ACCOUNT);
+
+        accountRepository.save(account);
     }
 
 }

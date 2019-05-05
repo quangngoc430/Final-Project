@@ -9,10 +9,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.vnuk.shopping.define.Define;
-import vn.edu.vnuk.shopping.exception.AccountNotFoundException;
-import vn.edu.vnuk.shopping.exception.AccountPasswordIsIncorrectException;
-import vn.edu.vnuk.shopping.exception.AccountValidationException;
-import vn.edu.vnuk.shopping.exception.EmailIsExitException;
+import vn.edu.vnuk.shopping.exception.account.AccountNotFoundException;
+import vn.edu.vnuk.shopping.exception.account.AccountPasswordIsIncorrectException;
+import vn.edu.vnuk.shopping.exception.account.AccountValidationException;
+import vn.edu.vnuk.shopping.exception.email.EmailIsExitException;
 import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.repository.AccountRepository;
 import vn.edu.vnuk.shopping.service.user.AccountService;
@@ -94,21 +94,6 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(oldAccount);
 
         return accountRepository.save(oldAccount);
-    }
-
-
-    @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void delete(Long id) throws AccountNotFoundException {
-        Optional<Account> accountOptional = accountRepository.findById(id);
-
-        if (!accountOptional.isPresent())
-            throw new AccountNotFoundException(id);
-
-        Account account = accountOptional.get();
-        account.setStatus(Define.STATUS_DELETED_ACCOUNT);
-
-        accountRepository.save(account);
     }
 
     @Override

@@ -29,6 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(converter);
     }
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "role"})
     private abstract class IgnoreHibernatePropertiesInJackson{ }
 }

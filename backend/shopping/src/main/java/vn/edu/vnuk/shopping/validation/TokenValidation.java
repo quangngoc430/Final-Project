@@ -1,6 +1,6 @@
 package vn.edu.vnuk.shopping.validation;
 
-import vn.edu.vnuk.shopping.exception.AccountValidationException;
+import vn.edu.vnuk.shopping.exception.account.AccountValidationException;
 import vn.edu.vnuk.shopping.model.OauthAccessToken;
 
 public interface TokenValidation {
