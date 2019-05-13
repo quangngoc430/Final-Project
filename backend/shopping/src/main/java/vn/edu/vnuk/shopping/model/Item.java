@@ -27,7 +27,7 @@ public class Item {
     private Long amount;
 
     @NotNull
-    @Column(name = "CategoryID")
+    @Column(name = "CategoryId")
     private Long categoryId;
 
     @Column(name = "ImageURLs")
@@ -44,6 +44,9 @@ public class Item {
 
     @Transient
     private Category category;
+
+    @Transient
+    private Float rating;
 
     public Long getId() {
         return id;
@@ -123,5 +126,30 @@ public class Item {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", amount=" + amount +
+                ", categoryId=" + categoryId +
+                ", imageURLs='" + imageURLs + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", category=" + category +
+                ", rating=" + rating +
+                '}';
     }
 }

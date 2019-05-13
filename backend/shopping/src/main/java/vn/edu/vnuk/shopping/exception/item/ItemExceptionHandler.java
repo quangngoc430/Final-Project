@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import vn.edu.vnuk.shopping.exception.account.AccountValidationException;
 import vn.edu.vnuk.shopping.model.ApiError;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,5 +24,15 @@ public class ItemExceptionHandler {
                                         request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = ItemValidationException.class)
+    public ResponseEntity<ApiError> handleAccountValidationException(HttpServletRequest request, Exception ex){
+        ApiError apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE.value(),
+                ((ItemValidationException) ex).getErrors(),
+                ex.getMessage(),
+                request.getRequestURI());
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_ACCEPTABLE);
     }
 }

@@ -96,4 +96,17 @@ public class DiscountPrice {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "DiscountPrice{" +
+                "id=" + id +
+                ", price=" + price +
+                ", percent=" + percent +
+                ", startingTime=" + startingTime +
+                ", endingTime=" + endingTime +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_NORMAL_USER')")
-    public Category getById(Long categoryId) throws CategoryNotFoundException {
+    public Category getOne(Long categoryId) throws CategoryNotFoundException {
 
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
 

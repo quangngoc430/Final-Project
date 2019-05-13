@@ -15,8 +15,8 @@ import vn.edu.vnuk.shopping.model.OauthAccessToken;
 import vn.edu.vnuk.shopping.repository.AccountRepository;
 import vn.edu.vnuk.shopping.repository.OauthAccessTokenRepository;
 import vn.edu.vnuk.shopping.service.user.TokenService;
-import vn.edu.vnuk.shopping.validation.Account.AccountValidation;
-import vn.edu.vnuk.shopping.validation.GroupLoginAccount;
+import vn.edu.vnuk.shopping.validation.account.AccountValidation;
+import vn.edu.vnuk.shopping.validation.account.GroupLoginAccount;
 
 import javax.transaction.Transactional;
 import java.util.Date;

@@ -1,10 +1,10 @@
 package vn.edu.vnuk.shopping.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import vn.edu.vnuk.shopping.validation.Account.GroupCreateAccount;
-import vn.edu.vnuk.shopping.validation.Account.GroupUpdateAccount;
-import vn.edu.vnuk.shopping.validation.Account.GroupUpdateAccountPassword;
-import vn.edu.vnuk.shopping.validation.GroupLoginAccount;
+import vn.edu.vnuk.shopping.validation.account.GroupCreateAccount;
+import vn.edu.vnuk.shopping.validation.account.GroupUpdateAccount;
+import vn.edu.vnuk.shopping.validation.account.GroupUpdateAccountPassword;
+import vn.edu.vnuk.shopping.validation.account.GroupLoginAccount;
 import vn.edu.vnuk.shopping.view.View;
 
 import java.io.Serializable;
@@ -180,4 +180,20 @@ public class Account implements Serializable {
         this.orders = orders;
     }
 
+    @Override
+    public String toString() {
+        return "account{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", roleId=" + roleId +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", role=" + role +
+                ", orders=" + orders +
+                '}';
+    }
 }

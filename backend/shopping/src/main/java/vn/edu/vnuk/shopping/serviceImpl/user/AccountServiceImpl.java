@@ -16,10 +16,10 @@ import vn.edu.vnuk.shopping.exception.email.EmailIsExitException;
 import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.repository.AccountRepository;
 import vn.edu.vnuk.shopping.service.user.AccountService;
-import vn.edu.vnuk.shopping.validation.Account.AccountValidation;
-import vn.edu.vnuk.shopping.validation.Account.GroupCreateAccount;
-import vn.edu.vnuk.shopping.validation.Account.GroupUpdateAccount;
-import vn.edu.vnuk.shopping.validation.Account.GroupUpdateAccountPassword;
+import vn.edu.vnuk.shopping.validation.account.AccountValidation;
+import vn.edu.vnuk.shopping.validation.account.GroupCreateAccount;
+import vn.edu.vnuk.shopping.validation.account.GroupUpdateAccount;
+import vn.edu.vnuk.shopping.validation.account.GroupUpdateAccountPassword;
 
 import java.util.Date;
 import java.util.Optional;

@@ -97,4 +97,17 @@ public class Comment {
     public void setItem(Item item) {
         this.item = item;
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", itemId=" + itemId +
+                ", accountId=" + accountId +
+                ", content='" + content + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", item=" + item +
+                '}';
+    }
 }

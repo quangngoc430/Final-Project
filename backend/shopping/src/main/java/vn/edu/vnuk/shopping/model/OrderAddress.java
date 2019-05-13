@@ -37,6 +37,9 @@ public class OrderAddress {
     @Column(name = "District")
     private String district;
 
+    @Column(name = "AccountID")
+    private Long accontId;
+
     @Column(name = "CreatedAt")
     private Date createdAt;
 
@@ -91,6 +94,14 @@ public class OrderAddress {
         this.district = district;
     }
 
+    public Long getAccontId() {
+        return accontId;
+    }
+
+    public void setAccontId(Long accontId) {
+        this.accontId = accontId;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -105,6 +116,21 @@ public class OrderAddress {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderAddress{" +
+                "id=" + id +
+                ", fullname='" + fullname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", accontId=" + accontId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
 

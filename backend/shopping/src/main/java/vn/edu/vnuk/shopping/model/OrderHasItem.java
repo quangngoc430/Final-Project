@@ -111,4 +111,19 @@ public class OrderHasItem {
     public void setDiscountPrice(DiscountPrice discountPrice) {
         this.discountPrice = discountPrice;
     }
+
+    @Override
+    public String toString() {
+        return "OrderHasItem{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", itemId=" + itemId +
+                ", discountPriceId=" + discountPriceId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", order=" + order +
+                ", item=" + item +
+                ", discountPrice=" + discountPrice +
+                '}';
+    }
 }

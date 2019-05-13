@@ -96,4 +96,17 @@ public class Order {
     public void setOrderAddress(OrderAddress orderAddress) {
         this.orderAddress = orderAddress;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", orderAddressId=" + orderAddressId +
+                ", accountId=" + accountId +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", orderAddress=" + orderAddress +
+                '}';
+    }
 }

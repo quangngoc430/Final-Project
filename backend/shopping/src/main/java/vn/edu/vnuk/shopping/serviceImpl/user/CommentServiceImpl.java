@@ -14,7 +14,7 @@ import vn.edu.vnuk.shopping.model.Comment;
 import vn.edu.vnuk.shopping.repository.CommentRepository;
 import vn.edu.vnuk.shopping.repository.ItemRepository;
 import vn.edu.vnuk.shopping.service.user.CommentService;
-import vn.edu.vnuk.shopping.validation.CommentValidation;
+import vn.edu.vnuk.shopping.validation.comment.CommentValidation;
 
 import javax.validation.groups.Default;
 

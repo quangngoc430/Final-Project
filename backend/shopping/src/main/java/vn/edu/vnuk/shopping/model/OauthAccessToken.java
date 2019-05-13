@@ -121,4 +121,19 @@ public class OauthAccessToken {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "OauthAccessToken{" +
+                "id=" + id +
+                ", accessToken='" + accessToken + '\'' +
+                ", expires=" + expires +
+                ", expiredAt=" + expiredAt +
+                ", Status=" + Status +
+                ", accountId=" + accountId +
+                ", account=" + account +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

@@ -9,7 +9,7 @@ import vn.edu.vnuk.shopping.exception.category.CategoryValidationException;
 import vn.edu.vnuk.shopping.model.Category;
 import vn.edu.vnuk.shopping.repository.CategoryRepository;
 import vn.edu.vnuk.shopping.service.admin.AdminCategoryService;
-import vn.edu.vnuk.shopping.validation.CategoryValidation;
+import vn.edu.vnuk.shopping.validation.category.CategoryValidation;
 
 import javax.validation.groups.Default;
 import java.util.Date;
