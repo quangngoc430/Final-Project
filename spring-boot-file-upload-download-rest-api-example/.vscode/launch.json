@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - FileDemoApplication",
+            "request": "launch",
+            "mainClass": "com.example.filedemo.FileDemoApplication",
+            "projectName": "file-demo"
+        }
+    ]
+}
