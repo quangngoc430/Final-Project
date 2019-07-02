@@ -26,7 +26,7 @@ class ShopTech:
         self.movieID_to_name = {}
         self.name_to_movieID = {}
 
-        reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
+        reader = Reader(line_format='user item rating', sep=',', skip_lines=1)
 
         ratingsDataset = Dataset.load_from_file(self.ratingsPath, reader=reader)
 

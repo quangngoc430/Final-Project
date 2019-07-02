@@ -63,15 +63,28 @@ CREATE TABLE `Item`
 	PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `Rating`
+(
+	`ID` INT NOT NULL AUTO_INCREMENT,
+	`Value` INT NOT NULL,
+	`ItemID` INT NOT NULL,
+	`AccountID` INT NOT NULL,
+	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`ID`),
+	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`),
+	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `Item_Has_Category`
 (
-  `ID` int NOT NULL AUTO_INCREMENT,
-  `CategoryID` int,
-  `ItemID` int,
-  `CreatedAt` datetime,
-  `UpdatedAt` datetime,
-  PRIMARY KEY (`ID`),
-  FOREIGN KEY (`CategoryID`) REFERENCES `Category`(`ID`)
+	`ID` int NOT NULL AUTO_INCREMENT,
+	`CategoryID` int,
+	`ItemID` int,
+	`CreatedAt` datetime,
+	`UpdatedAt` datetime,
+	PRIMARY KEY (`ID`),
+	FOREIGN KEY (`CategoryID`) REFERENCES `Category`(`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Comment` 
