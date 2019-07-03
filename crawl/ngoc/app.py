@@ -10,6 +10,10 @@ from flask import Flask, Request, Response
 
 app = Flask(__name__)
 
+current_path = os.getcwd()
+
+print(current_path)
+
 base_url = "https://philong.com.vn"
 urls_and_names = [["https://philong.com.vn/may-tinh-xach-tay.html", "may tinh xach tay"],
                   ["https://philong.com.vn/may-tinh-bo-all-in-one.html", "may tinh bo all in one"],
