@@ -52,15 +52,19 @@ CREATE TABLE `Category`
 CREATE TABLE `Item` 
 (
 	`ID` INT NOT NULL AUTO_INCREMENT,
-	`Name` VARCHAR(200) NOT NULL,
+	`Name` VARCHAR(1000) NOT NULL,
 	`Price` FLOAT,
 	`Amount` INT NOT NULL,
-	`CategoryID` INT NOT NULL,
-	`ImageURLs` VARCHAR(10240),
+	`Warranty` VARCHAR(200),
+	`ImageURLs` TEXT,
+	`Infos` TEXT,
+	`Technical_Infos` TEXT,
 	`Description` VARCHAR(5000),
+	`CategoryID` INT NOT NULL,
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`ID`)
+	PRIMARY KEY (`ID`),
+	FOREIGN KEY (`CategoryID`) REFERENCES `Category`(`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Rating`
@@ -156,4 +160,19 @@ CREATE TABLE `DiscountPrice`
 	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO Role(Name) VALUES("admin"), ("normal_user");
+-- Category
+
+INSERT INTO Category (Name) VALUES ('Máy tính xách tay');
+INSERT INTO Category (Name) VALUES ('Máy tính bộ all in one');
+INSERT INTO Category (Name) VALUES ('Điện thoại - table - đồ chơi');
+INSERT INTO Category (Name) VALUES ('Linh kiện máy tính');
+INSERT INTO Category (Name) VALUES ('Phụ kiện - gaming gear');
+INSERT INTO Category (Name) VALUES ('Thiết bị mạng - wifi');
+INSERT INTO Category (Name) VALUES ('Thiết bị văn phòng');
+INSERT INTO Category (Name) VALUES ('camera - an ninh - giải pháp');
+INSERT INTO Category (Name) VALUES ('Thiết bị siêu thị - gia đình');
+INSERT INTO Category (Name) VALUES ('Âm thanh - chiếu sáng');
+INSERT INTO Category (Name) VALUES ('Apple center');
+
+-- Item
+

@@ -135,7 +135,7 @@ def get_data_of_an_item(url_item):
                 item_infos.append(p.text)
         
         #print(item_infos)
-        item.set_item_infos(item_infos)
+        item.set_item_infos(json.dumps(item_infos))
     else:
         item.set_item_infos(str(None))
 
@@ -180,6 +180,7 @@ def get_data_of_an_item(url_item):
     
 def get_all_url_items(urls_and_names):
     urls = []
+    categoryID = 0
     for url_and_name in urls_and_names:
         url = url_and_name[0]
         condition = True
@@ -197,8 +198,10 @@ def get_all_url_items(urls_and_names):
                 page = page + 1
                 product_items = product_item_in_list.find_all("h4", attrs={"class": "p-name"})
                 for product_item in product_items:
-                    urls.append(base_url + product_item.find('a')['href'])
+                    urls.append([base_url + product_item.find('a')['href'], categoryID])
                     print("url " + base_url + product_item.find('a')['href'])
+
+        categoryID = categoryID + 1
 
     return urls
 
@@ -206,14 +209,15 @@ def write_urls_to_file(urls_and_names):
     urls = get_all_url_items(urls_and_names)
 
     with open("urls.csv", mode="a") as csv_file:
-        fieldnames = ["ID", "url"]
+        fieldnames = ["ID", "url", "categoryID"]
         writer = csv.DictWriter(csv_file, fieldnames)
         writer.writeheader()
         id = 0
 
         for url in urls:
             writer.writerow({"ID": id,
-                            "url": url})
+                            "url": url[0],
+                            "categoryID": str(url[1])})
             
             id = id + 1
 
@@ -232,18 +236,20 @@ def get_all_urls_from_file(file_name):
 
     return urls
 
+write_urls_to_file(get_all_url_items(urls_and_names))
+
 urls = get_all_urls_from_file("urls.csv")
 
-# with open("temp.csv", mode="a") as csv_file:
-#     fieldnames = ["title",
-#                   "warranty", 
-#                   "price", 
-#                   "image_item_origin",
-#                   "image_item_resize",
-#                   "item_infos",
-#                   "item_infos_technical"]
-#     writer = csv.DictWriter(csv_file, fieldnames)
-#     writer.writeheader()
+with open("temp.csv", mode="a") as csv_file:
+    fieldnames = ["title",
+                  "warranty", 
+                  "price", 
+                  "image_item_origin",
+                  "image_item_resize",
+                  "item_infos",
+                  "item_infos_technical"]
+    writer = csv.DictWriter(csv_file, fieldnames)
+    writer.writeheader()
 
 index = 1
 for url in urls:

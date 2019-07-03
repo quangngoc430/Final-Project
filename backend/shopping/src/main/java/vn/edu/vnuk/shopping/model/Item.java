@@ -26,12 +26,17 @@ public class Item {
     @Column(name = "Amount")
     private Long amount;
 
-    @NotNull
-    @Column(name = "CategoryId")
-    private Long categoryId;
+    @Column(name = "Warranty")
+    private String warranty;
 
     @Column(name = "ImageURLs")
     private String imageURLs;
+
+    @Column(name = "Infos")
+    private String infos;
+
+    @Column(name = "Technical_Infos")
+    private String technicalInfos;
 
     @Column(name = "Description")
     private String description;
@@ -39,14 +44,18 @@ public class Item {
     @Column(name = "CreatedAt")
     private Date createdAt;
 
+    @Transient
+    private Float rating;
+
+    @NotNull
+    @Column(name = "CategoryId")
+    private Long categoryId;
+
     @Column(name = "UpdatedAt")
     private Date updatedAt;
 
     @Transient
     private Category category;
-
-    @Transient
-    private Float rating;
 
     public Long getId() {
         return id;
@@ -128,6 +137,30 @@ public class Item {
         this.category = category;
     }
 
+    public String getWarranty() {
+        return warranty;
+    }
+
+    public void setWarranty(String warranty) {
+        this.warranty = warranty;
+    }
+
+    public String getInfos() {
+        return infos;
+    }
+
+    public void setInfos(String infos) {
+        this.infos = infos;
+    }
+
+    public String getTechnicalInfos() {
+        return technicalInfos;
+    }
+
+    public void setTechnicalInfos(String technicalInfos) {
+        this.technicalInfos = technicalInfos;
+    }
+
     public Float getRating() {
         return rating;
     }
@@ -143,13 +176,15 @@ public class Item {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", amount=" + amount +
-                ", categoryId=" + categoryId +
+                ", warranty='" + warranty + '\'' +
                 ", imageURLs='" + imageURLs + '\'' +
+                ", infos='" + infos + '\'' +
+                ", technicalInfos='" + technicalInfos + '\'' +
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
+                ", categoryId=" + categoryId +
                 ", updatedAt=" + updatedAt +
                 ", category=" + category +
-                ", rating=" + rating +
                 '}';
     }
 }
