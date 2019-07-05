@@ -53,7 +53,7 @@ CREATE TABLE `Item`
 (
 	`ID` INT NOT NULL AUTO_INCREMENT,
 	`Name` VARCHAR(1000) NOT NULL,
-	`Price` FLOAT,
+	`Price` INT,
 	`Amount` INT NOT NULL,
 	`Warranty` VARCHAR(200),
 	`ImageURLs` TEXT,
@@ -174,5 +174,7 @@ INSERT INTO Category (Name) VALUES ('Thiết bị siêu thị - gia đình');
 INSERT INTO Category (Name) VALUES ('Âm thanh - chiếu sáng');
 INSERT INTO Category (Name) VALUES ('Apple center');
 
--- Item
+-- Role
+INSERT INTO Role (Name) VALUES ('ROLE_ADMIN'),
+('ROLE_NORMAL_USER');
 

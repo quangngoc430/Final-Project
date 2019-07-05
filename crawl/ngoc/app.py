@@ -73,7 +73,7 @@ def get_data_of_an_item(url_item):
     price = None
     image_item_resize = []
     image_item_origin = []
-    item_infos = []
+    item_infos = ""
     item_infos_technical = []
     item = philong.Item()
 
@@ -85,7 +85,7 @@ def get_data_of_an_item(url_item):
     ## Get title
     title = html_page.find("div", attrs={"class": "entry-header"}).find('h1').text
     #print("Tieu he: " + title)
-    item.set_title(title)
+    item.set_title(title.replace('\"', ''))
 
     ## Get warranty
     temp = html_page.find("div", attrs={"class": "entry-header"}).find_all("span")
@@ -120,10 +120,10 @@ def get_data_of_an_item(url_item):
             image_item_resize.append(get_resize_image_url(origin_image_url))
     
     #print(json.dumps(image_item_origin))
-    item.set_item_image_origin(json.dumps(image_item_origin))
+    item.set_item_image_origin(image_item_origin[0])
 
     #print(json.dumps(image_item_resize))
-    item.set_item_image_resize(json.dumps(image_item_resize))
+    item.set_item_image_resize(image_item_resize[0])
 
     temp = html_page.find("div", attrs={"class": "pro-info"})
 
@@ -132,10 +132,13 @@ def get_data_of_an_item(url_item):
 
         if (len(temp) != 0):
             for p in temp:
-                item_infos.append(p.text)
+                item_infos = item_infos + " || " + p.text
+
+        item_infos = item_infos[4:].replace('\"', '')
         
         #print(item_infos)
-        item.set_item_infos(json.dumps(item_infos))
+        #item.set_item_infos(json.dumps(item_infos))
+        item.set_item_infos(item_infos)
     else:
         item.set_item_infos(str(None))
 
@@ -169,7 +172,8 @@ def get_data_of_an_item(url_item):
                 item_infos_technical.append(item_info_technical)
 
             #print(json.dumps(item_infos_technical))
-            item.set_item_infos_technical(json.dumps(item_infos_technical))
+            #item.set_item_infos_technical(json.dumps(item_infos_technical))
+            item.set_item_infos_technical(item_infos_technical)
         else:
             item.set_item_infos_technical(str(None))
     except:
@@ -236,7 +240,7 @@ def get_all_urls_from_file(file_name):
 
     return urls
 
-write_urls_to_file(get_all_url_items(urls_and_names))
+#write_urls_to_file(get_all_url_items(urls_and_names))
 
 urls = get_all_urls_from_file("urls.csv")
 

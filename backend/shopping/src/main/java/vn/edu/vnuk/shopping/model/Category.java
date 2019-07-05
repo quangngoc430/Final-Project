@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 
 @Entity
-@Table(name = "category")
+@Table(name = "Category")
 public class Category {
 
     @Id

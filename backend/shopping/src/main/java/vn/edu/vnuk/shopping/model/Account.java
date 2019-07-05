@@ -22,7 +22,7 @@ import javax.validation.constraints.*;
 import javax.validation.groups.Default;
 
 @Entity
-@Table(name = "account")
+@Table(name = "Account")
 public class Account implements Serializable {
     
     private static final long serialVersionUID = -470638540947227479L;

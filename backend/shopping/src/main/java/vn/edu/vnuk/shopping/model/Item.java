@@ -20,7 +20,7 @@ public class Item {
 
     @NotNull
     @Column(name = "Price")
-    private Float price;
+    private Integer price;
 
     @NotNull
     @Column(name = "Amount")
@@ -73,11 +73,11 @@ public class Item {
         this.name = name;
     }
 
-    public Float getPrice() {
+    public Integer getPrice() {
         return this.price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

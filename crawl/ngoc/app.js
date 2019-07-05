@@ -34,7 +34,7 @@ async function run() {
 
       if (title !== "None") {
 
-        price = (item.price === '' | item.price === 'Liên h') ? -1 : item.price;
+        price = (item.price === '' | item.price === 'Liên h') ? 500000 : item.price;
         image_item_origin = item.image_item_origin.replace(re, '///\\');
         item_infos = item.item_infos.replace(re, '///\\');
         item_infos_technical = item.item_infos_technical.replace(re, '///\\');

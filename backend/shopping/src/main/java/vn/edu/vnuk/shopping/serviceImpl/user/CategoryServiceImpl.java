@@ -22,7 +22,6 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_NORMAL_USER')")
     public Page<Category> getAll(String keyword, Pageable pageable) {
         return categoryRepository.findAll(keyword, pageable);
     }

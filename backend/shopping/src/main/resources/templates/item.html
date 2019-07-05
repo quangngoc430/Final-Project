@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${item.name}"></title>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+
+</head>
+<body style="background-color: #f0f0f0;">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="nav navbar-nav">
+                <a class="navbar-brand" th:href="@{/}">Fashion</a>
+            </div>
+            <div class="nav navbar-nav mx-auto">                
+            </div>
+
+            <div class="nav navbar-nav">
+                <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/cart}">Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/login}">Signin</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/signup}">Signup</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>             
+        </nav>                  
+    </header>
+    <div class="body">
+        <div class="container">
+            <div class="row" style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: -20px -20px;">
+                
+                <div class="col-md-12" style="margin: 40px 0px 0px 0px;">
+                    <h1 style="font-size: 24px;" th:text="${item.name}"></h1>
+                </div>
+
+                <div class="col-md-12" style="margin: 10px 0px;"><hr/></div>
+
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img th:src="${item.imageURLs}" style="height: 300px; width: 100%;">
+                        </div>
+
+                        <ul class="row" style="margin: 10px 2px;">
+                            <li th:each="info : ${#strings.arraySplit(item.infos, '||')}" class="col-md-6" th:text="${info}"></li>
+                        </ul>
+                    </div>                    
+                </div>
+                <div class="col-md-4">
+                    <h3 th:text="${'Giá bán: ' + item.price + 'đ'}"></h3>
+                    <h3 th:text="'Số lượng: ' + ${item.amount}"></h3>
+                    <div class="form-control btn btn-danger">MUA NGAY</div>
+                    <div class="form-control btn btn-success mt-2">THÊM VÀO GIỎ HÀNG</div>
+                </div>
+                <div class="col-md-3">
+                    <strong>Trợ giúp:</strong>
+                    <ul style="margin: 15px 0px 25px -20px;">
+                        <li style="font-size: 14px;">Hướng dẫn mua hàng nhanh chóng</li>
+                        <li style="font-size: 14px;">Chính sách bảo hành tại Phi Long</li>
+                        <li style="font-size: 14px;">Chính sách đổi, trả lại hàng</li>
+                    </ul>
+
+                    <strong>Điện thoại tư vấn - đặt hàng:</strong>
+                    <ul style="margin: 15px 0px 25px -20px;">
+                        <li style="font-size: 14px;">Ngọc: 0905098365</li>
+                    </ul>
+
+                    <strong>Địa chỉ mua hàng:</strong>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2041.6355107916193!2d108.2194426003638!3d16.070220815262317!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31421836b46f422b%3A0x463eab6243ccd7a7!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBOZ2_huqFpIG5n4buvIC0gxJBIIMSQw6AgTuG6tW5nIChDxqEgc-G7nyAyKQ!5e0!3m2!1svi!2sus!4v1557686927984!5m2!1svi!2sus" height="250px" width="250px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="row" style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07);">
+                
+                <div class="col-md-12" style="padding: 30px 0px 0px 15px;">
+                    <h2>Sản phẩm tương tự</h2>
+                </div>
+
+                <div class="col-md-12" style="margin: 0px 0px 20px 0px;"><hr/></div>
+
+                <div class="product col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <div class="card" style="padding: 0px;">
+                        <img class="product-image" src="images/product.jpg" style="height: 200px; margin: 0px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title</h5>
+                            <p class="card-text"><span>Maker: </span>Bui Lam Quang Ngoc</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <div class="card" style="padding: 0px;">
+                        <img class="product-image" src="images/product-1.jpg" style="height: 200px; margin: 0px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title</h5>
+                            <p class="card-text"><span>Maker: </span>Bui Lam Quang Ngoc</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <div class="card" style="padding: 0px;">
+                        <img class="product-image" src="images/product-2.jpg" style="height: 200px; margin: 0px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title</h5>
+                            <p class="card-text"><span>Maker: </span>Bui Lam Quang Ngoc</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <div class="card" style="padding: 0px;">
+                        <img class="product-image" src="images/product-3.jpg" style="height: 200px; margin: 0px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title</h5>
+                            <p class="card-text"><span>Maker: </span>Bui Lam Quang Ngoc</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="padding: 40px 0px 0px 0px;"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="page-footer font-small unique-color-dark">
+        <div>
+            <div class="container">
+                <div class="row py-4 d-flex align-items-center">
+                    <div class="col-md-6 col-lg-5 text-center text-md-left mb-4 mb-md-0">
+                        <h6 class="mb-0">Get connected with us on social networks!</h6>
+                    </div>
+                    <div class="col-md-6 col-lg-7 text-center text-md-right">
+                        <a class="fb-ic">
+                            <i class="fa fa-facebook-f white-text mr-4"> </i>
+                        </a>
+                        <a class="tw-ic">
+                            <i class="fa fa-twitter white-text mr-4"> </i>
+                        </a>
+                        <a class="ins-ic">
+                            <i class="fa fa-instagram white-text"> </i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container text-center text-md-left mt-5">
+                <div class="row mt-3">
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Company name</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                        <p>Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit amet,
+                        consectetur
+                        adipisicing elit.</p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Products</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                        <p><a href="#!">MDBootstrap</a></p>
+                        <p><a href="#!">MDWordPress</a></p>
+                        <p><a href="#!">BrandFlow</a></p>
+                        <p><a href="#!">Bootstrap Angular</a></p>            
+                    </div>
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Useful links</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                        <p><a href="#!">Your Account</a></p>
+                        <p><a href="#!">Become an Affiliate</a></p>
+                        <p><a href="#!">Shipping Rates</a></p>
+                        <p><a href="#!">Help</a></p>
+                    </div>
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Contact</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                        <p><i class="fa fa-home mr-3"></i> New York, NY 10012, US</p>
+                        <p><i class="fa fa-envelope mr-3"></i> info@example.com</p>
+                        <p><i class="fa fa-phone mr-3"></i> + 01 234 567 88</p>
+                        <p><i class="fa fa-print mr-3"></i> + 01 234 567 89</p>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
