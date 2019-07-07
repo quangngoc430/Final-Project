@@ -60,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_NORMAL_USER')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_NORMAL_USER')")
     public Account getOne(Long id) throws AccountNotFoundException {
         Optional<Account> accountOptional = accountRepository.findById(id);
 

@@ -21,11 +21,31 @@ public class Rating {
     @Column(name = "Value")
     private Long value;
 
+    @Column(name = "Comment")
+    private String comment;
+
+    @Transient
+    private Account account;
+
     @Column(name = "CreatedAt")
     private Date createdAt;
 
     @Column(name = "UpdatedAt")
     private Date updatedAt;
+
+    public Rating() {}
+
+    public Rating(Rating rating, Account account) {
+        this.id = rating.id;
+        this.itemId = rating.itemId;
+        this.accountId = rating.accountId;
+        this.value = rating.value;
+        this.comment = rating.comment;
+        this.createdAt = rating.createdAt;
+        this.updatedAt = rating.updatedAt;
+
+        this.account = account;
+    }
 
     public Long getId() {
         return id;
@@ -59,6 +79,22 @@ public class Rating {
         this.value = value;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -82,6 +118,7 @@ public class Rating {
                 ", accountId=" + accountId +
                 ", itemId=" + itemId +
                 ", value=" + value +
+                ", comment='" + comment + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';

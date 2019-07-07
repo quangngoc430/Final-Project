@@ -8,7 +8,6 @@ import vn.edu.vnuk.shopping.exception.common.UnauthorizedException;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 @Lazy
 public interface CommonService {
 

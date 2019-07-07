@@ -41,7 +41,7 @@
                             <a class="nav-link" th:href="@{/}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/}">Cart</a>
+                            <a class="nav-link" th:href="@{/cart}">Cart</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/login}">Signin</a>
@@ -97,11 +97,29 @@
                         <a th:href="@{'/item/' + ${item.id}}">
                             <img class="product-image" th:src="${item.imageURLs}" height="150" style="margin: 0px; width: 100%;">
                         </a>
-                        <div class="card-body">
+                        <div class="card-body border-top">
                             <a th:href="@{'/item/' + ${item.id}}" style="text-decoration: none;">
                                 <h5 class="card-title" th:text="${#strings.abbreviate(item.name, 30)}"></h5>
                             </a>
+
+                            <ul style="margin-left: -20px;">
+                                <li class="card-text"
+                                   th:if="${#lists.size(#strings.arraySplit(item.infos, '||')) > 0}"
+                                   th:text="${#strings.arraySplit(item.infos, '||')[0]}"
+                                   style="font-size: 12px;"></li>
+                                <li class="card-text"
+                                   th:if="${#lists.size(#strings.arraySplit(item.infos, '||')) > 1}"
+                                   th:text="${#strings.arraySplit(item.infos, '||')[1 ]}"
+                                   style="font-size: 12px;"></li>
+                                <li class="card-text"
+                                   th:if="${#lists.size(#strings.arraySplit(item.infos, '||')) > 2}"
+                                   th:text="${#strings.arraySplit(item.infos, '||')[2]}"
+                                   style="font-size: 12px;"></li>
+                            </ul>
+
                             <p class="card-text">Price: <span class="product-price" th:text="${item.price}"></span>đ</p>
+                            <a class="form-control btn btn-success" th:href="@{'/item/' + ${item.id}}">Add to cart</a>
+                            <a class="form-control btn btn-danger mt-2" th:href="@{'/item/' + ${item.id}}">Checkout now</a>
                         </div>
                     </div>
                 </div>
