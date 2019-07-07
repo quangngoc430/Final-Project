@@ -47,7 +47,7 @@
                             <a class="nav-link" th:href="@{/login}">Signin</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/singup}">Signup</a>
+                            <a class="nav-link" th:href="@{/signup}">Signup</a>
                         </li>
                     </ul>
                 </div>
@@ -101,7 +101,7 @@
                             <a th:href="@{'/item/' + ${item.id}}" style="text-decoration: none;">
                                 <h5 class="card-title" th:text="${#strings.abbreviate(item.name, 30)}"></h5>
                             </a>
-                            <p class="card-text" th:text="${'Price: ' + item.price}">/p>
+                            <p class="card-text">Price: <span class="product-price" th:text="${item.price}"></span>đ</p>
                         </div>
                     </div>
                 </div>
@@ -171,11 +171,21 @@
     <script>
         $(window).ready(() => {
             resizeProductImage();
+            pricesWithCommas();
         });
 
         $(window).on('resize', function(){
             resizeProductImage();
         });
+
+        function pricesWithCommas() {
+            let prices = $('.product-price');
+            for (let index = 0; index < prices.length; index ++) {
+                price = prices[index];
+                priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                price.textContent = priceContent;
+            }
+        }
 
         function resizeProductImage() {
             let productImageWidth = $('.product-image').width();
