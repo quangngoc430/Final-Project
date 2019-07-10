@@ -126,6 +126,7 @@
                 contentType: 'application/json',
                 success: function (token) {
                     console.log(token);
+
                     window.localStorage.setItem('accessToken', token.accessToken);
                     window.localStorage.setItem('accountId', token.accountId);
                     window.localStorage.setItem('roleId', token.account.roleId);

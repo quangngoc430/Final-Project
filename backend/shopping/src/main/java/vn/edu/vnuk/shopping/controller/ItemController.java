@@ -32,6 +32,7 @@ public class ItemController {
             @RequestParam(name = "size", required = false) Long size,
             @RequestParam(name = "accountId", required = false) Long accountId,
             Pageable pageable) {
+        // TODO: check rating exist => best buy
 
         final String uri = "http://localhost:5000/user/" + accountId + "?size=" + size;
 

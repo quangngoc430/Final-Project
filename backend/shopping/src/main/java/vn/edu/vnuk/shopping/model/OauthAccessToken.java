@@ -13,6 +13,21 @@ import javax.validation.constraints.NotNull;
 @Table(name = "OAuthAccessToken")
 public class OauthAccessToken {
 
+    public OauthAccessToken() {}
+
+    public OauthAccessToken(OauthAccessToken oauthAccessToken, Account account) {
+        this.id = oauthAccessToken.id;
+        this.accessToken = oauthAccessToken.accessToken;
+        this.expires = oauthAccessToken.expires;
+        this.expiredAt = oauthAccessToken.expiredAt;
+        this.status = oauthAccessToken.status;
+        this.accountId = account.getId();
+        this.createdAt = oauthAccessToken.createdAt;
+        this.updatedAt = oauthAccessToken.updatedAt;
+
+        this.account = account;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -35,7 +50,7 @@ public class OauthAccessToken {
 
     @NotNull
     @Column(name = "Status")
-    private Long Status;
+    private Long status;
 
     @NotNull
     @Column(name = "AccountID")
@@ -83,11 +98,11 @@ public class OauthAccessToken {
     }
 
     public Long getStatus() {
-        return Status;
+        return this.status;
     }
 
     public void setStatus(Long status) {
-        Status = status;
+        this.status = status;
     }
 
     public Long getAccountId() {
@@ -129,7 +144,7 @@ public class OauthAccessToken {
                 ", accessToken='" + accessToken + '\'' +
                 ", expires=" + expires +
                 ", expiredAt=" + expiredAt +
-                ", Status=" + Status +
+                ", status=" + status +
                 ", accountId=" + accountId +
                 ", account=" + account +
                 ", createdAt=" + createdAt +

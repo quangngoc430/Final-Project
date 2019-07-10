@@ -81,4 +81,9 @@ public class ViewController {
         model.addAttribute("item", item);
         return "item";
     }
+
+    @GetMapping(value = "account")
+    public String account() {
+        return "account";
+    }
 }
