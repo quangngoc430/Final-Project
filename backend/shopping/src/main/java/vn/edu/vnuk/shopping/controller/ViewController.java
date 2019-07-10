@@ -63,6 +63,11 @@ public class ViewController {
         return "signup";
     }
 
+    @GetMapping(value = "/cart")
+    public String cart() {
+        return "cart";
+    }
+
     @GetMapping(value = "/category/{id}")
     public String category(@PathVariable(value = "id") long id) {
         return "category";

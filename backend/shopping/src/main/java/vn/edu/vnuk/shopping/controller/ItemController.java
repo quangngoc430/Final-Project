@@ -7,12 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import vn.edu.vnuk.shopping.exception.category.CategoryNotFoundException;
 import vn.edu.vnuk.shopping.exception.item.ItemNotFoundException;
 import vn.edu.vnuk.shopping.exception.item.ItemValidationException;
 import vn.edu.vnuk.shopping.model.Item;
 import vn.edu.vnuk.shopping.service.admin.AdminItemService;
 import vn.edu.vnuk.shopping.service.user.ItemService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ItemController {
@@ -23,11 +27,32 @@ public class ItemController {
     @Autowired
     private AdminItemService adminItemService;
 
+    @GetMapping(value = "/api/items-suggestion", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Page<Item>> getItemsSuggestion(
+            @RequestParam(name = "size", required = false) Long size,
+            @RequestParam(name = "accountId", required = false) Long accountId,
+            Pageable pageable) {
+
+        final String uri = "http://localhost:5000/user/" + accountId + "?size=" + size;
+
+        RestTemplate restTemplate = new RestTemplate();
+        String[] result = restTemplate.getForObject(uri, String[].class);
+
+        List<Long> itemIds = new ArrayList<>();
+
+        for (String el : result) {
+            itemIds.add(Long.valueOf(el));
+        }
+
+        return new ResponseEntity<>(itemService.getAll(pageable, itemIds), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/api/items", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Page<Item>> getAll(@RequestParam(name = "categoryId", required = false) Long categoryId,
+                                             @RequestParam(name = "itemIds", required = false) List<Long> itemIds,
                                              Pageable pageable) throws CategoryNotFoundException {
         if (categoryId == null)
-            return new ResponseEntity<>(itemService.getAll(pageable), HttpStatus.OK);
+            return new ResponseEntity<>(itemService.getAll(pageable, itemIds), HttpStatus.OK);
         return new ResponseEntity<>(itemService.getAll(categoryId, pageable), HttpStatus.OK);
     }
 

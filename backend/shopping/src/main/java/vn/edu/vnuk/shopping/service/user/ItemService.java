@@ -6,9 +6,13 @@ import vn.edu.vnuk.shopping.exception.category.CategoryNotFoundException;
 import vn.edu.vnuk.shopping.exception.item.ItemNotFoundException;
 import vn.edu.vnuk.shopping.model.Item;
 
+import java.util.List;
+
 public interface ItemService {
 
     Page<Item> getAll(Pageable pageable);
+
+    Page<Item> getAll(Pageable pageable, List<Long> itemIds);
 
     Page<Item> getAll(Long categoryId, Pageable pageable) throws CategoryNotFoundException;
 

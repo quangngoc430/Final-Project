@@ -2,6 +2,7 @@ const csv=require('csvtojson')
 const mysql = require('mysql');
 const random = require('random');
 const utf8 = require('utf8');
+const fs = require('fs');
 
 const con = mysql.createConnection({
   host: "localhost",
@@ -41,14 +42,15 @@ async function run() {
 
         var sql = `INSERT INTO Item(Name, Price, Amount, Warranty, ImageURLs, Infos, Technical_Infos, CategoryID) VALUES ("${title}", "${price}", "${random.int(min = 1, max = 100)}", "${item.warranty}", "${image_item_origin}", "${item_infos}", "${item_infos_technical}", ${Number(idsAndCategoryIDs[index][1]) + 1});`;
 
-        //console.log(sql)
+        fs.appendFileSync(__dirname + '/names.txt', sql + '\n');
+
+        console.log(sql)
 
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log("1 record inserted");
+          //console.log("1 record inserted");
         });
         index = index + 1;
-        console.log(index);
       }
     }
   });

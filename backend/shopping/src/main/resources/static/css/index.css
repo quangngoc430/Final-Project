@@ -6,3 +6,7 @@ footer {
 img {
     image-rendering: auto;
 }
+
+body {
+    background-color: #f0f0f0;
+}

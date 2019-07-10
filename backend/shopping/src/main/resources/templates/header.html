@@ -1,0 +1,44 @@
+<header  xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="nav navbar-nav">
+            <a class="navbar-brand" th:href="@{/}">Fashion</a>
+        </div>
+
+        <div class="nav navbar-nav mx-auto">
+            <form th:if="${#httpServletRequest.requestURI == '/'}" style="width: 600px;">
+                <div class="input-group">
+                    <input class="form-control red-border" type="text" placeholder="Search" aria-label="Search">
+                    <div class="input-group-append">
+                        <span class="input-group-text red lighten-3" id="basic-text1"><i class="fa fa-search text-grey" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="nav navbar-nav">
+            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="home">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item" id="nav-cart" hidden="true">
+                        <a class="nav-link" th:href="@{/cart}">Cart</a>
+                    </li>
+                    <li class="nav-item" id="nav-signin" hidden="true">
+                        <a class="nav-link" th:href="@{/login}">Signin</a>
+                    </li>
+                    <li class="nav-item" id="nav-signup" hidden="true">
+                        <a class="nav-link" th:href="@{/signup}">Signup</a>
+                    </li>
+
+                    <li class="nav-item" id="nav-user" hidden="true">
+                        <a class="nav-link" th:href="@{/user}"><i class="fa fa-user"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

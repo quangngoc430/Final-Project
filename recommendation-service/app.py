@@ -4,7 +4,7 @@ import threading
 import time
 import json
 import schedule 
-from flask import Flask, Request, Response 
+from flask import Flask, Request, request, Response 
 
 app = Flask(__name__)
 ml = ShopTech()
@@ -36,7 +36,9 @@ def build_recommendation_model():
     return trainSet
     print('\nDone building recommendation model...')
 
-def preditct(test_subject):
+def preditct(test_subject, size):
+
+    ShopTech.trainSet = build_recommendation_model()
 
     print("Computing recommendations...")
     trainSet = ShopTech.trainSet
@@ -52,17 +54,23 @@ def preditct(test_subject):
 
     recommendations.sort(key=lambda x: x[1], reverse=True)
 
-    return recommendations[:7]
+    results = []
+
+    for recommendation in recommendations[:int(size)]:
+        results.append(recommendation[0])
+
+    return results
 
 def run():
     while(True):
         ShopTech.trainSet = build_recommendation_model()
         time.sleep(60 * 60)
 
+#/user/<id>?size=<size>
 @app.route('/user/<id>')
 def recommendation_items_for_user(id):
-    return Response(json.dumps(preditct(id)),  mimetype='application/json')
+    return Response(json.dumps(preditct(id, request.args.get('size'))),  mimetype='application/json')
 
 if __name__ == '__main__':
-    threading.Thread(target=run).start()
+    #threading.Thread(target=run).start()
     app.run(debug=True, port=5000) #run app in debug mode on port 5000

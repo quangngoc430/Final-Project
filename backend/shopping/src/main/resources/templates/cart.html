@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+    <!-- header -->
+    <div th:insert="header :: header"></div>
+
+    <!-- Start Cart area -->
+    <section class="cart_area mb-5">
+        <div class="container">
+            <div class="cart_inner" style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-products">
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="clearfix">
+                        <a class="btn btn-success float-right" th:href="@{/confirmation}">Proceed to checkout</a>
+                        <a class="btn btn-secondary float-right mr-2" th:href="@{/}">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Cart area -->
+
+    <!-- Footer -->
+    <div th:insert="footer :: footer"></div>
+
+    <script>
+        $(document).ready(() => {
+            let url = 'http://localhost:8080/api/items?itemIds=';
+            let items = JSON.parse(window.localStorage.getItem('items'));
+
+            if (items) {
+                for (let item of items) {
+                    url = url + item.id + ',';
+                }
+
+                url = url.substring(0, url.length - 1);
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (itemsResult) {
+
+                        for (let item of itemsResult.content) {
+                            itemStorage = items.find(el => {return el.id == item.id});
+                            $('#table-products').append(generateItem(item, itemStorage));
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+
+        function generateItem(item, itemStorage) {
+            let productTemplate = `<tr>
+                    <td>
+                        <div class="media row align-items-center ml-3">
+                            <div class="d-flex">
+                                <a href="${'http://localhost:8080/item/' + item.id}"><img style="height: 150px; width: 150px;" src="${item.imageURLs}"></a>
+                            </div>
+                            <div class="media-body ml-3">
+                                <a href="${'http://localhost:8080/item/' + item.id}"><p style="vertical-align: middle;">${item.name}</p></a>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="align-middle">
+                        <div class="product_count">
+                            <input class="form-control quantity" type="number" id="quantity" value="${itemStorage.quantity}" min="1" max="${item.amount}" step="1">
+                        </div>
+                    </td>
+                    <td class="align-middle">
+                        <h5 class="product-price">${item.price}</h5>
+                    </td>
+                    <td class="align-middle">
+                        <h5 class="product-total-price">${item.price * itemStorage.quantity}đ</h5>
+                    </td>
+                </tr>`;
+
+            return productTemplate;
+        }
+    </script>
+</body>
+</html>

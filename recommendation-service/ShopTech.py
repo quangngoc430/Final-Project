@@ -3,11 +3,20 @@ import csv
 import sys
 import re
 
+import mysql.connector
+
 from surprise import Dataset
 from surprise import Reader
 
 from collections import defaultdict
 import numpy as np
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root",
+  database="TechShop"
+)
 
 class ShopTech:
     trainSet = None
@@ -15,7 +24,7 @@ class ShopTech:
     movieID_to_name = {}
     name_to_movieID = {}
     ratingsPath = './ml-latest-small/ratings.csv'
-    moviesPath = './ml-latest-small/movies.csv'
+    moviesPath = './ml-latest-small/items.csv'
     
     def loadMovieLensLatestSmall(self):
 
@@ -24,11 +33,39 @@ class ShopTech:
 
         ratingsDataset = 0
         self.movieID_to_name = {}
-        self.name_to_movieID = {}
+        self.name_to_movieID = {}        
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT * FROM Rating")
+
+        myresult = mycursor.fetchall()
+
+        with open('./ml-latest-small/ratings.csv', mode='w') as csv_file:
+            fieldnames = ['user', 'item', 'rating']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+            writer.writeheader()
+
+            for x in myresult:
+                writer.writerow({'user': str(x[4]), 'item': str(x[3]), 'rating': str(x[1])})
 
         reader = Reader(line_format='user item rating', sep=',', skip_lines=1)
 
         ratingsDataset = Dataset.load_from_file(self.ratingsPath, reader=reader)
+
+        mycursor.execute("SELECT * FROM Item")
+
+        myresult = mycursor.fetchall()
+
+        with open('./ml-latest-small/items.csv', mode='w') as csv_file:
+            fieldnames = ['id', 'name']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+            writer.writeheader()
+
+            for x in myresult:
+                writer.writerow({'id': str(x[0]), 'name': str(x[1])})
 
         with open(self.moviesPath, newline='', encoding='ISO-8859-1') as csvfile:
                 movieReader = csv.reader(csvfile)

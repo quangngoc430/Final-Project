@@ -9,10 +9,17 @@ import org.springframework.stereotype.Repository;
 
 import vn.edu.vnuk.shopping.model.Item;
 
+import java.util.List;
+
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Long> {
 
     Page<Item> findAllBy(Pageable pageable);
+
+    @Query("select item " +
+            "from Item item " +
+            "where item.id in :itemIds")
+    Page<Item> findAllBy(@Param("itemIds") List<Long> itemIds, Pageable pageable);
 
     @Query("select item " +
            "from Item item " +

@@ -35,6 +35,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Page<Item> getAll(Pageable pageable, List<Long> itemIds) {
+        return itemRepository.findAllBy(itemIds, pageable);
+    }
+
+    @Override
     public Page<Item> getAll(Long categoryId, Pageable pageable) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
 

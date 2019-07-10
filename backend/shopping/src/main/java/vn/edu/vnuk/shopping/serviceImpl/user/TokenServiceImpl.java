@@ -41,14 +41,13 @@ public class TokenServiceImpl implements TokenService {
     public OauthAccessToken create(Account accountParam) throws EmailAndPasswordIsIncorrectException, AccountValidationException, AccountIsLockedException {
         accountValidation.validate(accountParam, GroupLoginAccount.class);
 
-        boolean isCorrect = true;
+        boolean isCorrect = false;
         String email = accountParam.getEmail(), password = accountParam.getPassword();
 
         Account account = accountRepository.getByEmail(email);
 
-        if (account == null) isCorrect = false;
-
-        if (!passwordEncoder.matches(password, account.getPassword())) isCorrect = false;
+        if (account != null &&
+            passwordEncoder.matches(password, account.getPassword())) isCorrect = true;
 
         if (!isCorrect) throw new EmailAndPasswordIsIncorrectException(email, password);
 
