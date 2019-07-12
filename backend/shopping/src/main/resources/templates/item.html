@@ -76,7 +76,7 @@
             <div class="row" style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 0px;">
                 <div class="col-md-4 col-sm-12 border-right">
                     <h4>Average user rating</h4>
-                    <h2 class="bold padding-bottom-7">4.3/5
+                    <h2 class="bold padding-bottom-7"><p id="average-rating" style="display: inline-block;"></p>
                         <button type="button" class="btn btn-warning btn-sm" style="margin-top: -6px;" aria-label="Left Align">
                             <span class="fa fa-star" aria-hidden="true" style="color: white;"></span>
                         </button>
@@ -94,7 +94,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="float-left" style="margin-left:10px;">0</div>
+                        <div class="float-left" id="rating-value-5" style="margin-left:10px;">0</div>
                     </div>
                     <div class="clearfix">
                         <div class="float-left" style="width:35px; line-height:1;">
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="float-left" style="margin-left:10px;">0</div>
+                        <div class="float-left" id="rating-value-4" style="margin-left:10px;">0</div>
                     </div>
                     <div class="clearfix">
                         <div class="float-left" style="width:35px; line-height:1;">
@@ -120,7 +120,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="float-left" style="margin-left:10px;">0</div>
+                        <div class="float-left" id="rating-value-3" style="margin-left:10px;">0</div>
                     </div>
                     <div class="clearfix">
                         <div class="float-left" style="width:35px; line-height:1;">
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="float-left" style="margin-left:10px;">0</div>
+                        <div class="float-left" id="rating-value-2" style="margin-left:10px;">0</div>
                     </div>
                     <div class="clearfix">
                         <div class="float-left" style="width:35px; line-height:1;">
@@ -146,7 +146,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="float-left" style="margin-left:10px;">0</div>
+                        <div class="float-left" id="rating-value-1" style="margin-left:10px;">0</div>
                     </div>
 
                     <div class="mt-4">
@@ -183,23 +183,42 @@
     <script th:src="@{/js/main.js}"></script>
 
     <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        const itemId = /*[[${item.id}]]*/ null;
+
+        /*]]>*/
+
+        let isComment = false;
+        let ratingId = null;
+        const currentUser = JSON.parse(window.localStorage.getItem('account'));
+
         $(document).ready(() => {
             checkLogin();
 
-            /*<![CDATA[*/
-
-            let itemId = /*[[${item.id}]]*/ null;
-
-            /*]]>*/
-
             $.ajax({
-                url: 'http://localhost:8080/api/ratings/' + itemId,
+                url: host + '/api/items/' + itemId + '/ratings',
                 type: 'GET',
                 contentType: 'application/json',
                 success: function (ratings) {
+                    let sumRatings = 0;
+
                     for(rating of ratings) {
                         addRating(rating);
+                        sumRatings = sumRatings + Number(rating.value);
+
+                        if (rating.accountId == currentUser.id) {
+                            $('#rating').val(rating.value);
+                            $('#comment').val(rating.comment);
+                            isComment = true;
+                            ratingId = rating.id;
+                        }
+
+                        let ratingValueField = $("#rating-value-" + rating.value);
+                        ratingValueField.text(Number(ratingValueField.text()) + 1);
                     }
+
+                    $('#average-rating').text((sumRatings / ratings.length) + "/5");
 
                     console.log('done');
                 },
@@ -209,7 +228,7 @@
             });
 
             $.ajax({
-                url: 'http://localhost:8080/api/items-suggestion?accountId=' + window.localStorage.getItem('accountId') + '&size=4',
+                url: host + '/api/items-suggestion?accountId=' + window.localStorage.getItem('accountId') + '&size=4',
                 type: 'GET',
                 contentType: 'application/json',
                 success: function (items) {
@@ -238,20 +257,37 @@
                 'comment': $('#comment').val()
             };
 
-            $.ajax({
-                url: 'http://localhost:8080/api/ratings?accessToken=' + accessToken,
-                type: 'POST',
-                data: JSON.stringify(data),
-                contentType: 'application/json',
-                success: function (rating) {
-                    console.log(rating);
+            if (!isComment) {
+                $.ajax({
+                    url: host + '/api/ratings?accessToken=' + accessToken,
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (rating) {
+                        console.log(rating);
 
-                    console.log('done');
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
+                        console.log('done');
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: host + '/api/ratings/' + ratingId + '?accessToken=' + accessToken,
+                    type: 'PUT',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (rating) {
+                        $(`#rating-comment-${rating.id}`).text(rating.comment);
+
+                        console.log('done');
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
         }
 
         function addRating(rating) {
@@ -267,10 +303,10 @@
                 </a>
                 <div class="media-body">
                     <span class="text-muted float-right">
-                        <small class="text-muted" id="rating-time-ago">30 min ago</small>
+                        <small class="text-muted" class="rating-time-ago">30 min ago</small>
                     </span>
                     <strong class="text-success">${rating.account.email}</strong>
-                    <p id="rating-comment">${rating.comment}</p>
+                    <p id="rating-comment-${rating.id}">${rating.comment}</p>
                 </div>
             </li>`;
 

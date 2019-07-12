@@ -9,9 +9,9 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-mycursor.execute("SELECT * FROM Account")
+mycursor.execute("SELECT * FROM Rating")
 
-myresult = mycursor.fetchall()
-
-for x in myresult:
-  print(x)
+row = mycursor.fetchall()
+while row is not None:
+    print(row[0], row[3], row[4])
+    row = mycursor.fetchone()

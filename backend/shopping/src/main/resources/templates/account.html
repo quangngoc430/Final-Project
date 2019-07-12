@@ -59,9 +59,15 @@
                         <span class="error"></span>
                     </div>
 
-                    <div id="rePassword-group" class="form-group mt-4" hidden="true">
-                        <label for="rePassword">Comfirm password :</label>
-                        <input type="password" name="rePassword" id="rePassword" class="form-control" placeholder="Confirm password">
+                    <div id="newPassword-group" class="form-group mt-4" hidden="true">
+                        <label for="newPassword">New password :</label>
+                        <input type="password" name="newPassword" id="newPassword" class="form-control" placeholder="New password">
+                        <span class="error"></span>
+                    </div>
+
+                    <div id="reNewPassword-group" class="form-group mt-4" hidden="true">
+                        <label for="reNewPassword">Comfirm new password :</label>
+                        <input type="password" name="reNewPassword" id="reNewPassword" class="form-control" placeholder="Confirm new password">
                         <span class="error"></span>
                     </div>
 
@@ -88,23 +94,28 @@
         });
 
         $('#btnSubmit').click(function() {
-
             if (!$('#form-signup').valid()) return;
 
-            account = JSON.stringify({
+            const accessToken = window.localStorage.getItem('accessToken');
+            const accountLocalStorage = JSON.parse(window.localStorage.getItem('account'));
+
+            let account = {
                 "email": $('#email').val(),
-                "fullname": $('#fullname').val(),
-                "password": $('#password').val(),
-                "newPassword": $('#newPassword').val()
-            });
+                "fullname": $('#fullname').val()
+            };
+
+            if (!$('#newPassword-group').attr('hidden')) {
+                account['password'] = $('#password').val();
+                account['newPassword'] = $('#newPassword').val();
+            }
+
             $.ajax({
-                url: host + '/api/accounts',
-                type: 'POST',
-                data: account,
+                url: host + `/api/accounts/${accountLocalStorage.id}?accessToken=${accessToken}`,
+                type: 'PUT',
+                data: JSON.stringify(account),
                 contentType: 'application/json',
                 success: function (data) {
-                    console.log('Signup Done');
-                    window.location.href = host + '/login';
+                    console.log(data)
                 },
                 error: function (error) {
                     console.log(error);
@@ -114,7 +125,8 @@
 
         $('#btn-change-password').click(() => {
             $('#password-group').attr('hidden', !$('#password-group').attr('hidden'));
-            $('#rePassword-group').attr('hidden', !$('#rePassword-group').attr('hidden'));
+            $('#newPassword-group').attr('hidden', !$('#newPassword-group').attr('hidden'));
+            $('#reNewPassword-group').attr('hidden', !$('#reNewPassword-group').attr('hidden'));
         });
 
         function validate() {
@@ -147,30 +159,40 @@
                         maxlength: 40,
                         regex: /^[a-zA-Z0-9]+/
                     },
-                    rePassword: {
-                        equalTo: "#password"
+                    newPassword: {
+                        minlength: 8,
+                        maxlength: 40,
+                        regex: /^[a-zA-Z0-9]+/
+                    },
+                    reNewPassword: {
+                        equalTo: "#newPassword"
                     }
                 },
                 messages: {
                     fullname: {
                         required: 'Please input fullname',
-                            minlength: 'Minimum 8 characters required',
-                            maxlength: 'Maximum 40 characters required'
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required'
                     },
                     email: {
                         required: 'Please input email',
-                            minlength: 'Minimum 8 characters required',
-                            maxlength: 'Maximum 40 characters required',
-                            regex: 'Email must have template ^[a-zA-Z0-9._]+\\@gmail.com'
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Email must have template ^[a-zA-Z0-9._]+\\@gmail.com'
                     },
                     password: {
                         required: 'Please input password',
-                            minlength: 'Minimum 8 characters required',
-                            maxlength: 'Maximum 40 characters required',
-                            regex: 'Email must have template ^[a-zA-Z0-9]+'
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Password must have template ^[a-zA-Z0-9]+'
                     },
-                    rePassword: {
-                        equalTo: 'Confirm password must be the same password'
+                    newPassword: {
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Email must have template ^[a-zA-Z0-9]+'
+                    },
+                    reNewPassword: {
+                        equalTo: 'Confirm new password must be the same new password'
                     }
                 }
             });

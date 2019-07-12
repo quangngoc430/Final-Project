@@ -36,7 +36,7 @@ def build_recommendation_model():
     return trainSet
     print('\nDone building recommendation model...')
 
-def preditct(test_subject, size):
+def predict(test_subject, size):
 
     ShopTech.trainSet = build_recommendation_model()
 
@@ -61,16 +61,10 @@ def preditct(test_subject, size):
 
     return results
 
-def run():
-    while(True):
-        ShopTech.trainSet = build_recommendation_model()
-        time.sleep(60 * 60)
-
 #/user/<id>?size=<size>
 @app.route('/user/<id>')
 def recommendation_items_for_user(id):
-    return Response(json.dumps(preditct(id, request.args.get('size'))),  mimetype='application/json')
+    return Response(json.dumps(predict(id, request.args.get('size'))),  mimetype='application/json')
 
 if __name__ == '__main__':
-    #threading.Thread(target=run).start()
     app.run(debug=True, port=5000) #run app in debug mode on port 5000

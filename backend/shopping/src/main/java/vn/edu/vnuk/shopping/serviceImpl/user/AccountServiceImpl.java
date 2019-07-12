@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
     public Account update(Long id, Account account) throws AccountNotFoundException, AccountValidationException, AccountPasswordIsIncorrectException {
         accountValidation.validate(account, GroupUpdateAccount.class);
 
-        if (account.getPassword() != null || !account.getPassword().isEmpty()) accountValidation.validate(account, GroupUpdateAccountPassword.class);
+        if (account.getPassword() != null) accountValidation.validate(account, GroupUpdateAccountPassword.class);
 
         Optional<Account> accountOptional = accountRepository.findById(id);
 
@@ -84,14 +84,13 @@ public class AccountServiceImpl implements AccountService {
         Account oldAccount = accountOptional.get();
         oldAccount.setFullname(account.getFullname());
 
-        if (account.getPassword() != null || !account.getPassword().isEmpty())
+        if (account.getPassword() != null)
             if (!passwordEncoder.matches(account.getPassword(), oldAccount.getPassword()))
                 throw new AccountPasswordIsIncorrectException(account.getPassword());
             else
                 oldAccount.setPassword(passwordEncoder.encode(account.getNewPassword()));
 
         oldAccount.setUpdatedAt(new Date());
-        accountRepository.save(oldAccount);
 
         return accountRepository.save(oldAccount);
     }

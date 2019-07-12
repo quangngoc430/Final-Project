@@ -18,4 +18,5 @@ public interface RatingRepository extends CrudRepository<Rating, Long> {
            "WHERE rating.itemId = :itemId")
     List<Rating> findAllByItemId(@Param("itemId") Long itemId);
 
+    Rating findByAccountIdAndItemId(Long accountId, Long itemId);
 }
