@@ -199,11 +199,26 @@
         }
 
         function getAccountInfo() {
-            let account = JSON.parse(window.localStorage.getItem('account'));
+            $.ajax({
+                url: host + '/api/token?accessToken=' + window.localStorage.getItem('accessToken'),
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (token) {
+                    const account = token.account;
 
-            $('#id').val(account.id);
-            $('#fullname').val(account.fullname);
-            $('#email').val(account.email);
+                    window.localStorage.setItem('account', JSON.stringify(account));
+
+                    $('#id').val(account.id);
+                    $('#fullname').val(account.fullname);
+                    $('#email').val(account.email);
+                },
+                error: function (error) {
+                    $('#nav-signin').attr("hidden", false);
+                    $('#nav-signup').attr("hidden", false);
+
+                    return false;
+                }
+            });
         }
     </script>
 </body>
