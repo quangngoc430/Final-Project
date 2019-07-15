@@ -30,22 +30,22 @@ public class ItemServiceImpl implements ItemService {
     private RatingRepository ratingRepository;
 
     @Override
-    public Page<Item> getAll(Pageable pageable) {
-        return itemRepository.findAllBy(pageable);
+    public Page<Item> getAll(String keyword, Pageable pageable) {
+        return itemRepository.findAllByNameLike(keyword, pageable);
     }
 
     @Override
-    public Page<Item> getAll(Pageable pageable, List<Long> itemIds) {
-        return itemRepository.findAllBy(itemIds, pageable);
+    public Page<Item> getAll(String keyword, Pageable pageable, List<Long> itemIds) {
+        return itemRepository.findAllBy(keyword, itemIds, pageable);
     }
 
     @Override
-    public Page<Item> getAll(Long categoryId, Pageable pageable) throws CategoryNotFoundException {
+    public Page<Item> getAll(String keyword, Long categoryId, Pageable pageable) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
 
         if (!categoryOptional.isPresent()) throw new CategoryNotFoundException(categoryId);
 
-        return itemRepository.findAllByCategoryId(categoryId, pageable);
+        return itemRepository.findAllByCategoryId(keyword, categoryId, pageable);
     }
 
     @Override

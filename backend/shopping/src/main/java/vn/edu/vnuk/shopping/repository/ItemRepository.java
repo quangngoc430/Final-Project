@@ -14,17 +14,25 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Long> {
 
-    Page<Item> findAllBy(Pageable pageable);
+    @Query("select item " +
+           "from Item item " +
+           "where item.name like concat('%', lower(trim(:keyword)), '%') ")
+    Page<Item> findAllByNameLike(@Param("keyword") String keyword,
+                                 Pageable pageable);
 
     @Query("select item " +
-            "from Item item " +
-            "where item.id in :itemIds")
-    Page<Item> findAllBy(@Param("itemIds") List<Long> itemIds, Pageable pageable);
+           "from Item item " +
+           "where item.id in :itemIds and item.name like concat('%', lower(trim(:keyword)), '%') ")
+    Page<Item> findAllBy(@Param("keyword") String keyword,
+                         @Param("itemIds") List<Long> itemIds,
+                         Pageable pageable);
 
     @Query("select item " +
            "from Item item " +
            "inner join Category category " +
            "on category.id = item.categoryId " +
-           "where category.id = :categoryId")
-    Page<Item> findAllByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
+           "where category.id = :categoryId and item.name like concat('%', lower(trim(:keyword)), '%') ")
+    Page<Item> findAllByCategoryId(@Param("keyword") String keyword,
+                                   @Param("categoryId") Long categoryId,
+                                   Pageable pageable);
 }

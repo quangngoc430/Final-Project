@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface ItemService {
 
-    Page<Item> getAll(Pageable pageable);
+    Page<Item> getAll(String keyword, Pageable pageable);
 
-    Page<Item> getAll(Pageable pageable, List<Long> itemIds);
+    Page<Item> getAll(String keyword, Pageable pageable, List<Long> itemIds);
 
-    Page<Item> getAll(Long categoryId, Pageable pageable) throws CategoryNotFoundException;
+    Page<Item> getAll(String keyword, Long categoryId, Pageable pageable) throws CategoryNotFoundException;
 
     Item getOne(Long itemId) throws ItemNotFoundException;
 }

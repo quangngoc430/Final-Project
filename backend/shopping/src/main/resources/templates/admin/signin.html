@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+
+    <style>
+        span.error {
+            color: red;
+            font-style: italic;
+            font-size: 12px;
+        }
+    </style>
+
+    <!-- header -->
+    <div th:insert="header :: header"></div>
+
+    <div class="body">
+        <div class="container" style="margin-top: 50px; margin-bottom: 50px">
+            <div class="row">
+                <form id="form-login"
+                      class="p-5 col-md-6 offset-md-3"
+                      style="background-color: #fff;  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07);"
+                      action="javascript:void(0);">
+
+                    <p class="h4 mb-4 text-center">Sign in</p>
+
+                    <input type="text" name="email" id="email" class="form-control" placeholder="E-mail">
+                    <span class="error"></span>
+
+                    <input type="password" name="password" id="password" class="form-control mt-4" placeholder="Password">
+                    <span class="error"></span>
+
+                    <button class="btn btn-primary btn-block my-4" type="submit" id="btnLogin">Sign in</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:insert="footer :: footer"></div>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+    <script>
+        $(document).ready(() => {
+            checkLogin();
+            validate();
+        });
+
+        function validate() {
+            $.validator.addMethod(
+                "regex",
+                function(value, element, regex) {
+                    var check = false;
+                    return this.optional(element) || regex.test(value);
+                },
+                "Please check your input."
+            );
+
+            $("#form-login").validate({
+                errorElement: 'span',
+                rules: {
+                    email: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 40,
+                        regex: /^[a-zA-Z0-9._]+\@gmail.com/
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 40,
+                        regex: /^[a-zA-Z0-9]+/
+                    }
+                },
+                messages: {
+                    email: {
+                        required: 'Please input email',
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Email must have template ^[a-zA-Z0-9._]+\\@gmail.com'
+                    },
+                    password: {
+                        required: 'Please input password',
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Email must have template ^[a-zA-Z0-9]+'
+                    }
+                }
+            });
+        }
+
+        $('#btnLogin').click(function() {
+
+            if (!$('#form-login').valid()) return;
+
+            account = JSON.stringify({
+                "email": $('#email').val(),
+                "password": $('#password').val()
+            });
+            $.ajax({
+                url: 'http://localhost:8080/api/login',
+                type: 'POST',
+                data: account,
+                contentType: 'application/json',
+                success: function (token) {
+                    console.log(token);
+
+                    if (token.account.roleId === 1) {
+                        window.localStorage.setItem('accessToken', token.accessToken);
+                        window.localStorage.setItem('accountId', token.accountId);
+                        window.localStorage.setItem('roleId', token.account.roleId);
+
+
+                        window.location.href = host + '/admin';
+                    }
+
+                    console.log('done');
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

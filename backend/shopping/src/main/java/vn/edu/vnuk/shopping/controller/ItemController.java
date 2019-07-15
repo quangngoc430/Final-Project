@@ -45,16 +45,20 @@ public class ItemController {
             itemIds.add(Long.valueOf(el));
         }
 
-        return new ResponseEntity<>(itemService.getAll(pageable, itemIds), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.getAll("", pageable, itemIds), HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/items", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Page<Item>> getAll(@RequestParam(name = "categoryId", required = false) Long categoryId,
                                              @RequestParam(name = "itemIds", required = false) List<Long> itemIds,
+                                             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
                                              Pageable pageable) throws CategoryNotFoundException {
         if (categoryId == null)
-            return new ResponseEntity<>(itemService.getAll(pageable, itemIds), HttpStatus.OK);
-        return new ResponseEntity<>(itemService.getAll(categoryId, pageable), HttpStatus.OK);
+            if (itemIds == null)
+                return new ResponseEntity<>(itemService.getAll(keyword, pageable), HttpStatus.OK);
+            else
+                return new ResponseEntity<>(itemService.getAll(keyword, pageable, itemIds), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.getAll(keyword, categoryId, pageable), HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/items/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})

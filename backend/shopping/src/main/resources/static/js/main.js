@@ -38,3 +38,4 @@ $('#nav-logout').click(() => {
     window.localStorage.clear();
     window.location.href = host;
 });
+

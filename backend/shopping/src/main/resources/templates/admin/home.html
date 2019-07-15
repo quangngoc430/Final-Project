@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Collapsible sidebar using Bootstrap 4</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/adminManage.css}">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <div th:insert="admin/sidebar :: sidebar"></div>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="container">
+                <div class="main">
+                    <p>Titles, images, prices, product descriptions and related information must be consistent, correct and spelled correctly. As follows:</p>
+                    <ul>
+                        1 / Product images
+                        <li>Product images must be clear photos, product status details. Do not leave images or information unrelated to this product such as shop referral information, contact information or payment information.</li>
+                        <li>There must be at least one real image of the product taken by the Seller himself. In this picture, the real product area must occupy at least 40% of the total area of ​​the image.</li>
+                        <li>Absolutely not post nude, sexy, disgusting images that are not suitable for fine traditions.</li>
+                    </ul>
+                    <ul>
+                        2 / Product name
+                        <li>The product name must have enough characters, clear meanings, no special characters, no abbreviations.</li>
+                        <li>If it is a product set, the product name must specify the Combo / Set of products</li>
+                        <li>The name of the product must match the information on the product image.</li>
+                        <li>Does not contain fake / fake keywords or similar keywords</li>
+                    </ul>
+                </div>
+            </div>
+            
+                    
+        </div>
+    </div>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

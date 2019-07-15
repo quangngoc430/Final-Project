@@ -38,7 +38,7 @@ public class ViewController {
         List<Category> categoryList = new ArrayList<>();
 
         for (Category category : categories) {
-            List<Item> items = itemService.getAll(category.getId(), new PageRequest(0, 4)).getContent();
+            List<Item> items = itemService.getAll("", category.getId(), new PageRequest(0, 4)).getContent();
 
             if (items.size() > 0) {
                 itemsList.add(items);
@@ -73,7 +73,7 @@ public class ViewController {
         return "category";
     }
 
-    @GetMapping(value = "item/{id}")
+    @GetMapping(value = "/item/{id}")
     public String item(@PathVariable(value = "id") long id,
                        Model model) throws ItemNotFoundException {
         Item item = itemService.getOne(id);
@@ -82,8 +82,24 @@ public class ViewController {
         return "item";
     }
 
-    @GetMapping(value = "account")
+    @GetMapping(value = "/account")
     public String account() {
         return "account";
+    }
+
+
+    @GetMapping(value = "/admin/login")
+    public String adminLogin() {
+        return "admin/signin";
+    }
+
+    @GetMapping(value = "/admin")
+    public String adminHome() {
+        return "admin/home";
+    }
+
+    @GetMapping(value = "/admin/items")
+    public String adminItems() {
+        return "admin/items";
     }
 }

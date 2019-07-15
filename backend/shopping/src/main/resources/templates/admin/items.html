@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Collapsible sidebar using Bootstrap 4</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/adminManage.css}">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <div th:insert="admin/sidebar :: sidebar"></div>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="container">
+                <div class="search-box row mb-5">
+                    <input type="text" class="form-control offset-2 col-md-8 search" id="search"/>
+                </div>
+
+                <nav aria-label="navigation mb-5">
+                    <ul class="pagination">
+                        <li class="page-item" id="btnPrevious"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                        <li class="page-item" id="btnNext"><a class="page-link" href="javascript:void(0);">Next</a></li>
+                    </ul>
+                </nav>
+
+                <div class="cart_inner">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <tr id="p1">
+                                    <td>
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <p>Faded SkyBlu Denim Pum</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h5>$1500</h5>
+                                    </td>
+                                    <td>
+                                        <h5>30</h5>
+                                    </td>
+                                    <td>
+                                        <a href="item-edit.html"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                        <a><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                                <tr id="p2">
+                                    <td>
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <a href="../blog.html"><p>Faded SkyBlu Denim Pum</p></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h5>$1500</h5>
+                                    </td>
+                                    <td>
+                                        <h5>50</h5>
+                                    </td>
+                                    <td>
+                                        <a href="item-edit.html"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                        <a><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+    <script>
+        let currentPage = 0;
+        let totalPages = 0;
+
+        $(document).ready(() => {
+            const queryParams = $(location).attr('search').replace('?', '').split('&');
+            let params = {};
+
+            for (let queryParam of queryParams) {
+                queryParam = queryParam.split('=');
+                const key = queryParam[0];
+                const value = queryParam[1];
+
+                params[key] = value;
+            }
+
+            const keyword = (params.hasOwnProperty('search')) ? params.search : '';
+            const page = (params.hasOwnProperty('page')) ? params.page : 0;
+            const size = (params.hasOwnProperty('size')) ? params.size : 20;
+            const sort = (params.hasOwnProperty('sort')) ? params.sort : 'id';
+
+            $('#search').val(keyword);
+
+            searchItems(keyword, page, size, sort);
+        });
+
+        $('#search').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                const keyword =  $('#search').val();
+                searchItems(keyword);
+            }
+        });
+
+        $('#btnPrevious').click(() => {
+            if ($('#btnPrevious').hasClass('disabled')) return;
+            currentPage = currentPage - 1;
+            const keyword =  $('#search').val();
+
+            searchItems(keyword, currentPage);
+        });
+
+        $('#btnNext').click(() => {
+            if ($('#btnNext').hasClass('disabled')) return;
+
+            currentPage = currentPage + 1;
+            const keyword =  $('#search').val();
+
+            searchItems(keyword, currentPage);
+        });
+
+        function rewriteUrl(keyword = '', page = 0, size = 20, sort = 'id') {
+            const url = host + '/admin/items?search=' + keyword + '&page=' + page + '&size=' + size + '&sort=' + sort;
+
+            history.replaceState(history.state, $(document).title, url);
+        }
+
+        function searchItems(keyword = '', page = 0, size = 20, sort = 'id') {
+            const url = host + '/api/items?keyword=' + keyword + '&page=' + page + '&size=' + size + '&sort=' + sort;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (items) {
+                    console.log(items);
+                    generateItems(items.content);
+                    $('#btnPrevious').removeClass('disabled');
+                    $('#btnNext').removeClass('disabled');
+
+                    if (items.first)
+                        $('#btnPrevious').addClass('disabled');
+
+                    if (items.last)
+                        $('#btnNext').addClass('disabled');
+
+                    currentPage = Number(items.number);
+                    totalPages = Number(items.totalPages);
+
+                    rewriteUrl(keyword, page, size, sort);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function deleteItem(itemId) {
+            const url = host + '/api/items/' + itemId + '?accessToken=' + window.localStorage.accessToken;
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                contentType: 'application/json',
+                success: function (items) {
+                    console.log(items);
+                    $('#item-' + itemId).remove();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function generateItems(items) {
+
+            let itemsHTML = '';
+            for (let item of items) {
+                itemsHTML = itemsHTML + generateItem(item);
+            }
+
+            $('#table-body').html(itemsHTML);
+        }
+
+        function generateItem(item) {
+            let itemTemplate = `
+                    <tr id="item-${item.id}">
+                        <td>
+                            <h5>${item.id}</h5>
+                        </td>
+                        <td>
+                            <h5>${item.name}</h5>
+                        </td>
+                        <td>
+                            <h5>${item.price}</h5>
+                        </td>
+                        <td>
+                            <h5>${item.amount}</h5>
+                        </td>
+                        <td>
+                            <a href="${host}/api/item/${item.id}"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                            <a href="javascript:void(0);" onclick="deleteItem(${item.id})"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>`;
+
+            return itemTemplate;
+        }
+    </script>
+</body>
+
+</html>
