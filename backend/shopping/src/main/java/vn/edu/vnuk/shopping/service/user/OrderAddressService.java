@@ -7,11 +7,15 @@ import vn.edu.vnuk.shopping.exception.orderAddress.OrderAddressNotFoundException
 import vn.edu.vnuk.shopping.exception.orderAddress.OrderAddressValidationException;
 import vn.edu.vnuk.shopping.model.OrderAddress;
 
+import java.util.List;
+
 public interface OrderAddressService {
 
     OrderAddress getOne(Long orderAddressId) throws OrderAddressNotFoundException;
 
-    Page<OrderAddress> getAll(Long accountId, Pageable pageable) throws AccountNotFoundException;
+    Page<OrderAddress> getAll(Pageable pageable);
+
+    List<OrderAddress> getAll(Long accountId) throws AccountNotFoundException;
 
     OrderAddress create(OrderAddress orderAddress) throws OrderAddressValidationException;
 

@@ -24,6 +24,10 @@ public class OrderAddress {
     private String fullname;
 
     @NotNull
+    @Column(name = "Email")
+    private String email;
+
+    @NotNull
     @Column(name = "Phone")
     private String phone;
 
@@ -38,7 +42,7 @@ public class OrderAddress {
     private String district;
 
     @Column(name = "AccountID")
-    private Long accontId;
+    private Long accountId;
 
     @Column(name = "CreatedAt")
     private Date createdAt;
@@ -60,6 +64,14 @@ public class OrderAddress {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {
@@ -95,11 +107,11 @@ public class OrderAddress {
     }
 
     public Long getAccontId() {
-        return accontId;
+        return accountId;
     }
 
     public void setAccontId(Long accontId) {
-        this.accontId = accontId;
+        this.accountId = accontId;
     }
 
     public Date getCreatedAt() {
@@ -123,12 +135,13 @@ public class OrderAddress {
         return "OrderAddress{" +
                 "id=" + id +
                 ", fullname='" + fullname + '\'' +
+                ", email='" + email + '\''+
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
-                ", accontId=" + accontId +
-                ", createdAt=" + createdAt +
+                ", accountId=" + accountId + '\'' +
+                ", createdAt=" + createdAt + '\'' +
                 ", updatedAt=" + updatedAt +
                 '}';
     }

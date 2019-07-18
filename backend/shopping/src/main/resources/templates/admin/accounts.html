@@ -41,15 +41,12 @@
                         <label for="sort" class="col-md-4 my-auto">Sort : </label>
                         <select class="form-control col-md-8 custom-select" name="sort" id="sort">
                             <option value="id">ID</option>
-                            <option value="name">Name</option>
-                            <option value="price">Price</option>
-                            <option value="amount">Amount</option>
+                            <option value="fullname">Fullname</option>
+                            <option value="email">Email</option>
+                            <option value="roleId">Role</option>
                         </select>
                     </div>
                 </div>
-
-
-
 
                 <div class="cart_inner">
                     <div class="table-responsive">
@@ -57,9 +54,9 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Fullname</th>
+                                    <th scope="col">RoleId</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -112,14 +109,14 @@
             $('#sort').val(sort);
             $('#size').val(size);
 
-            searchItems();
+            searchAccounts();
         });
 
         $('#search').keyup(function(e){
             if(e.keyCode == 13)
             {
                 keyword =  $('#search').val();
-                searchItems();
+                searchAccounts();
             }
         });
 
@@ -128,7 +125,7 @@
             currentPage = currentPage - 1;
             const keyword =  $('#search').val();
 
-            searchItems();
+            searchAccounts();
         });
 
         $('#btnNext').click(() => {
@@ -137,46 +134,50 @@
             currentPage = currentPage + 1;
             const keyword =  $('#search').val();
 
-            searchItems();
+            searchAccounts();
         });
 
         $('#size').change(() => {
             size = $('#size').val();
-            searchItems();
+            searchAccounts();
         });
 
         $('#sort').change(() => {
             sort = $('#sort').val();
-            searchItems();
+            searchAccounts();
         });
 
         function rewriteUrl() {
-            const url = host + '/admin/items?search=' + keyword + '&page=' + currentPage + '&size=' + size + '&sort=' + sort;
+            const url = host + '/admin/accounts?search=' + keyword +
+                '&page=' + currentPage + '&size=' + size +
+                '&sort=' + sort + '&accessToken=' + window.localStorage.accessToken;
 
             history.replaceState(history.state, $(document).title, url);
         }
 
-        function searchItems() {
-            const url = host + '/api/items?keyword=' + keyword + '&page=' + currentPage + '&size=' + size + '&sort=' + sort;
+        function searchAccounts() {
+            const url = host + '/api/accounts?keyword=' +
+                keyword + '&page=' + currentPage + '&size=' + size +
+                '&sort=' + sort + '&accessToken=' + window.localStorage.accessToken;
 
             $.ajax({
                 url: url,
                 type: 'GET',
                 contentType: 'application/json',
-                success: function (items) {
-                    console.log(items);
-                    generateItems(items.content);
+                success: function (accounts) {
+                    console.log(accounts);
+                    generateAccounts(accounts.content);
                     $('#btnPrevious').removeClass('disabled');
                     $('#btnNext').removeClass('disabled');
 
-                    if (items.first)
+                    if (accounts.first)
                         $('#btnPrevious').addClass('disabled');
 
-                    if (items.last)
+                    if (accounts.last)
                         $('#btnNext').addClass('disabled');
 
-                    currentPage = Number(items.number);
-                    totalPages = Number(items.totalPages);
+                    currentPage = Number(accounts.number);
+                    totalPages = Number(accounts.totalPages);
 
                     rewriteUrl(keyword, page, size, sort);
                 },
@@ -186,16 +187,16 @@
             });
         }
 
-        function deleteItem(itemId) {
-            const url = host + '/api/items/' + itemId + '?accessToken=' + window.localStorage.accessToken;
+        function deleteAccount(accountId) {
+            const url = host + '/api/accounts/' + accountId + '?accessToken=' + window.localStorage.accessToken;
 
             $.ajax({
                 url: url,
                 type: 'DELETE',
                 contentType: 'application/json',
-                success: function (items) {
-                    console.log(items);
-                    $('#item-' + itemId).remove();
+                success: function (accounts) {
+                    console.log(accounts);
+                    $('#account-' + accountId).remove();
                 },
                 error: function (error) {
                     console.log(error);
@@ -203,38 +204,38 @@
             });
         }
 
-        function generateItems(items) {
+        function generateAccounts(accounts) {
 
-            let itemsHTML = '';
-            for (let item of items) {
-                itemsHTML = itemsHTML + generateItem(item);
+            let accountsHTML = '';
+            for (let account of accounts) {
+                accountsHTML = accountsHTML + generateAccount(account);
             }
 
-            $('#table-body').html(itemsHTML);
+            $('#table-body').html(accountsHTML);
         }
 
-        function generateItem(item) {
-            let itemTemplate = `
-                    <tr id="item-${item.id}">
+        function generateAccount(account) {
+            let accountTemplate = `
+                    <tr id="item-${account.id}">
                         <td>
-                            <h5>${item.id}</h5>
+                            <h5>${account.id}</h5>
                         </td>
                         <td>
-                            <h5>${item.name}</h5>
+                            <h5>${account.email}</h5>
                         </td>
                         <td>
-                            <h5>${item.price}</h5>
+                            <h5>${account.fullname}</h5>
                         </td>
                         <td>
-                            <h5>${item.amount}</h5>
+                            <h5>${account.roleId}</h5>
                         </td>
                         <td>
-                            <a href="${host}/api/item/${item.id}"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                            <a href="javascript:void(0);" onclick="deleteItem(${item.id})"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                            <a href="${host}/api/item/${account.id}"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                            <a href="javascript:void(0);" onclick="deleteAccount(${account.id})"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         </td>
                     </tr>`;
 
-            return itemTemplate;
+            return accountTemplate;
         }
     </script>
 </body>

@@ -18,24 +18,42 @@
     <section class="cart_area mb-5">
         <div class="container">
             <div class="cart_inner" style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+                <h2 class="text-center mb-5">List items</h2>
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th scope="col">Product</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Total</th>
-                        </tr>
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Action</th>
+                            </tr>
                         </thead>
                         <tbody id="table-products">
                         </tbody>
                     </table>
                     <hr>
                     <div class="clearfix">
-                        <a class="btn btn-success float-right" th:href="@{/confirmation}">Proceed to checkout</a>
+                        <a class="btn btn-success float-right" th:href="@{/items-bill-info}">Proceed to checkout</a>
                         <a class="btn btn-secondary float-right mr-2" th:href="@{/}">Continue Shopping</a>
                     </div>
+                </div>
+            </div>
+            <div style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+                <h2 class="text-center mb-5">History checkout</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col" class="text-center">Address</th>
+                                <th scope="col" class="text-center">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-checkouts">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -54,7 +72,7 @@
         $(document).ready(() => {
             checkLogin();
 
-            let url = 'http://localhost:8080/api/items?itemIds=';
+            let url = host + '/api/items?itemIds=';
             let items = JSON.parse(window.localStorage.getItem('items'));
 
             if (items) {
@@ -80,17 +98,43 @@
                     }
                 });
             }
+
+            url = host + '/api/orders?accountId=' + window.localStorage.getItem('accountId') + '&accessToken=' + window.localStorage.getItem('accessToken') + '&sort=updatedAt,desc';
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (ordersResult) {
+
+                    for (let order of ordersResult.content) {
+                        $('#table-checkouts').append(generateOrder(order));
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
         });
 
+        function generateOrder(order) {
+            let orderDate = new Date(Number(order.updatedAt));
+            let updatedAt = `${orderDate.getHours()}:${orderDate.getMinutes()}:${orderDate.getSeconds()}  ${orderDate.getDate()}-${orderDate.getMonth() + 1}-${orderDate.getFullYear()}`;
+            return `<tr>
+                <td class="text-center"><a href="${host + '/order/' + order.id}">#${order.id}</a></td>
+                <td class="text-center">${order.orderAddress.address}</td>
+                <td class="text-center">${updatedAt}</td>
+            </tr>`;
+        }
+
         function generateItem(item, itemStorage) {
-            let productTemplate = `<tr>
+            let productTemplate = `<tr id="item-${item.id}">
                     <td>
                         <div class="media row align-items-center ml-3">
                             <div class="d-flex">
-                                <a href="${'http://localhost:8080/item/' + item.id}"><img style="height: 150px; width: 150px;" src="${item.imageURLs}"></a>
+                                <a href="${host + '/item/' + item.id}"><img style="height: 150px; width: 150px;" src="${item.imageURLs}"></a>
                             </div>
                             <div class="media-body ml-3">
-                                <a href="${'http://localhost:8080/item/' + item.id}"><p style="vertical-align: middle;">${item.name}</p></a>
+                                <a href="${host + '/item/' + item.id}"><p style="vertical-align: middle;">${item.name}</p></a>
                             </div>
                         </div>
                     </td>
@@ -105,9 +149,26 @@
                     <td class="align-middle">
                         <h5 class="product-total-price">${item.price * itemStorage.quantity}đ</h5>
                     </td>
+                    <td class="align-middle text-center">
+                        <a style="font-size: 25px;" onclick="removeItemIntoLocalStorage(${item.id});">
+                            <i class="fa fa-close" style="color: #dc3545;"></i>
+                        </a>
+                    </td>
                 </tr>`;
 
             return productTemplate;
+        }
+
+        function  removeItemIntoLocalStorage(itemId) {
+            $('#item-' + itemId).remove();
+
+            let items = JSON.parse(window.localStorage.getItem('items'));
+
+            items = items.filter(item => {
+                return item.id != itemId;
+            });
+
+            window.localStorage.setItem('items', JSON.stringify(items));
         }
     </script>
 </body>

@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import vn.edu.vnuk.shopping.model.OrderAddress;
 
+import java.util.List;
+
 @Repository
 public interface OrderAddressRepository extends CrudRepository<OrderAddress, Long> {
 
-    Page<OrderAddress> findAllByAccontId(Long accountId, Pageable pageable);
+    Page<OrderAddress> findAllBy(Pageable pageable);
+
+    List<OrderAddress> findAllByAccountId(Long AccountId);
 }

@@ -68,6 +68,13 @@ public class ViewController {
         return "cart";
     }
 
+    @GetMapping(value = "/order/{id}")
+    public String order(@PathVariable(value = "id") Long id,
+                        Model model) {
+        model.addAttribute("id", id);
+        return "order";
+    }
+
     @GetMapping(value = "/category/{id}")
     public String category(@PathVariable(value = "id") long id) {
         return "category";
@@ -80,6 +87,16 @@ public class ViewController {
 
         model.addAttribute("item", item);
         return "item";
+    }
+
+    @GetMapping(value = "/items-bill-info")
+    public String itemsBillInfo() {
+        return "bill-user-info";
+    }
+
+    @GetMapping(value = "/confirmation")
+    public String confirmation() {
+        return "confirmation";
     }
 
     @GetMapping(value = "/account")
@@ -101,5 +118,10 @@ public class ViewController {
     @GetMapping(value = "/admin/items")
     public String adminItems() {
         return "admin/items";
+    }
+
+    @GetMapping(value = "/admin/accounts")
+    public String adminAccounts() {
+        return "admin/accounts";
     }
 }

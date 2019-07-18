@@ -90,7 +90,7 @@ public class Account implements Serializable {
 
     @JsonView(View.Public.class)
     @Transient
-    private List<Order> orders;
+    private List<Ordering> orderings;
 
     public Long getId() {
         return id;
@@ -172,12 +172,12 @@ public class Account implements Serializable {
         this.role = role;
     }
 
-    public List<Order> getOrders() {
-        return this.orders;
+    public List<Ordering> getOrders() {
+        return this.orderings;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setOrders(List<Ordering> orders) {
+        this.orderings = orders;
     }
 
     @Override
@@ -193,7 +193,7 @@ public class Account implements Serializable {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", role=" + role +
-                ", orders=" + orders +
+                ", orders=" + orderings +
                 '}';
     }
 }

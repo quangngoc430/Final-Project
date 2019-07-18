@@ -5,100 +5,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title> Biker.vn - For Biker Lover </title>
 
-	<!-- CSS -->
-	<link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-	<link rel="stylesheet" th:href="@{/css/main.css}">
-	<link rel="stylesheet" th:href="@{/css/commerce.css}">
-	<link rel="stylesheet" th:href="@{/css/linearicons.css}">
-	<link rel="stylesheet" th:href="@{/css/nice-select.css}">
-	<link rel="stylesheet" th:href="@{/css/nouislider.min.css}">
-	<link rel="stylesheet" th:href="@{/css/owl.carousel.css}">
-	<link rel="stylesheet" th:href="@{/css/themify-icons.css}">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
-    <!-- Start Header Area -->
-	<header class="header">
-		<!-- Main Navigation -->
-		<div class="main_nav_container">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 ">
-						<div class="logo_container">
-							<a th:href="@{/}"><img th:src="@{/img/logo2.jpg}"></a>
-						</div>
-						<nav class="navbar">
-							<ul class="navbar_menu">
-								<li><a th:href="@{/}">Home</a></li>
-								<li><a th:href="@{/items}">Category</a></li>
-								<li><a th:href="@{/blog}">What's New</a></li>
-								<li><a th:href="@{/contact}">contact</a></li>
-							</ul>
-							<ul class="navbar_user">
-								<li class="checkout">
-									<a th:href="@{/cart}">
-										<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-										<span id="checkout_items" class="checkout_items">2</span>
-									</a>
-								</li>
-							</ul>
-							<div class="hamburger_container">
-								<i class="fa fa-bars" aria-hidden="true"></i>
-							</div>
-						</nav>
-					</div>
-				</div>
-			</div>
-		</div>
-	</header>
-	<div class="hamburger_menu">
-		<div class="hamburger_close"><i class="fa fa-times" aria-hidden="true"></i></div>
-		<div class="hamburger_menu_content text-right">
-			<ul class="menu_top_nav">
-				<li class="menu_item"><a th:href="@{/}">Home</a></li>
-				<li class="menu_item"><a th:href="@{/items}">Category</a></li>
-				<li class="menu_item"><a th:href="@{/blogs}">What's New</a></li>
-				<li class="menu_item"><a th:href="@{/contact}">contact</a></li>
-			</ul>
-		</div>
-	</div>
-	<!-- End Header Area -->
+	<!-- Start Header Area -->
+	<div th:insert="header :: header"></div>
 
-	<!-- Start Banner Area -->
-	<section class="banner-area" style="background-image: url(img/banner/banner3.jpg)">
-		<div class="container">
-			<div class="banner-details d-flex flex-wrap align-items-center justify-content-center">
-				<div class="col-first">
-					<h1><span></span>Confirmation</h1>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- End Banner Area -->
+	<div th:replace="modal :: modal"></div>
 
     <!-- Start Order Details Area -->
-    <section class="order_details section_gap">
+    <section class="order_details section_gap" style="background-color: #fff; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
         <div class="container">
-            <h3 class="title_confirmation">Thank you. Your order has been received</h3>
+			<h2>Order Details</h2>
 			<div class="row order_details_inner">
-				<div class="col-md-12">
-					<div class="item_details">
-						<h3>Billing Address</h3>
-						<ul class="list" style="margin-left: -20px;">
-							<li><h5 id="name"></h5></li>
-							<li><h5 id="email"></h5></li>
-							<li><h5 id="phone"></h5></li>
-							<li><h5 id="address"></h5></li>
-						</ul>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label for="name" class=" col-form-label">Choose exist address : </label>
+						<select class="form-control" id="selectExistAddresses" size="6">
+						</select>
 					</div>
+
+				</div>
+				<div class="col-md-8">
+					<form class="row contact_form">
+						<div class="col-md-6 form-group">
+							<label for="name" class=" col-form-label">Full name</label>
+							<input type="text" class="form-control" id="name" placeholder="Full Name" readonly>
+						</div>
+						<div class="col-md-6 form-group ">
+							<label for="email" class="col-form-label">Email</label>
+							<input type="text" class="form-control" id="email" placeholder="Email Address" readonly>
+						</div>
+						<div class="col-md-6 form-group">
+							<label for="phone" class="col-form-label">Phone</label>
+							<input type="text" class="form-control" id="phone" placeholder="Phone number" readonly>
+						</div>
+						<div class="col-md-6 form-group">
+							<label for="address" class="col-form-label">Address</label>
+							<input type="text" class="form-control" id="address" placeholder="Address" readonly>
+						</div>
+					</form>
 				</div>
 			</div>
-			<div class="order_details_table">
+			<div class="order_details_table mb-5">
 				<h2>Order Details</h2>
 				<div class="table-responsive">
-					<table class="table">
-						<thead>
+					<table class="table table-bordered">
+						<thead class="thead-dark">
 							<tr>
 								<th scope="col">Product</th>
 								<th scope="col">Quantity</th>
@@ -109,84 +64,71 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="row mt-5">
+					<a class="btn btn-primary offset-3 col-md-6" style="color: #fff;" id="btnCheckout">Thanh toán</a>
+				</div>
 			</div>
         </div>
     </section>
     <!-- End Order Details Area -->
 
-	<!-- Start footer Area -->
-	<footer class="footer-area section_gap">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6  col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h4>Contact Us</h4>
-						<p>
-							<p> Make by Star Catchers with love <br></p>
-							<p>Address :158A Le Loi <br></p>
-							<p>Phone : 0123456789 <br></p>
-							<p>Email :Biker@gmail.com</p>
-						</p>
-					</div>
-				</div>
-				<div class="col-lg-4  col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h4>Newsletter</h4>
-						<p>Stay update with our latest</p>
-						<div class="" id="mc_embed_signup">
+	<!-- Footer -->
+	<div th:insert="footer :: footer"></div>
 
-							<form target="_blank" novalidate="true" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
-							 method="get" class="form-inline">
-
-								<div class="d-flex flex-row">
-
-									<input class="form-control" name="EMAIL" placeholder="Enter Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Email '"
-									 required="" type="email">
-
-
-									<button class="click-btn btn btn-default"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
-									<div style="position: absolute; left: -5000px;">
-										<input tabindex="-1" value="" type="text">
-									</div>
-								</div>
-								<div class="info"></div>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h4>Follow Us</h4>
-						<p>Let us be social</p>
-						<div class="footer-social d-flex align-items-center">
-							<a href="#"><i class="fa fa-facebook"></i></a>
-							<a href="#"><i class="fa fa-twitter"></i></a>
-							<a href="#"><i class="fa fa-instagram"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<!-- End footer Area -->
-
-	
-	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery-2.2.4.min.js"></script>
-	<script src="js/scroll.js"></script>
+	<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/main.js}"></script>
 
 	<script>
+		let orderAddresses = null;
+
 		$(document).ready(() => {
-			const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
+			checkLogin();
 
-			$('#name').text('Name : ' + userInfo.name);
-			$('#email').text('Email : ' +  userInfo.email);
-			$('#phone').text('Phone : ' + userInfo.phone);
-			$('#address').text('Address : ' + userInfo.address);
+			let url = host + '/api/order-addresses?accountId=' + window.localStorage.accountId + '&accessToken=' + window.localStorage.accessToken;
 
-			let url = 'http://localhost:8080/api/items?itemIds=';
+			$.ajax({
+				url: url,
+				type: 'GET',
+				contentType: 'application/json',
+				success: function (dataReturn) {
+					orderAddresses = dataReturn;
+
+					let optionsTemplate = '';
+					let index = 1;
+
+					for (let orderAddress of orderAddresses) {
+
+						if (orderAddress.id == window.localStorage.getItem('orderAddressId')) {
+							optionsTemplate = optionsTemplate + `<option id="order-address-${orderAddress.id}" value="${orderAddress.id}" selected>${index} - ${orderAddress.address}</option>`;
+							$('#name').val(orderAddress.fullname);
+							$('#email').val(orderAddress.email);
+							$('#phone').val(orderAddress.phone);
+							$('#address').val(orderAddress.address);
+						} else {
+							optionsTemplate = optionsTemplate + `<option id="order-address-${orderAddress.id}" value="${orderAddress.id}">${index} - ${orderAddress.address}</option>`;
+						}
+						index++;
+					}
+
+					$('#selectExistAddresses').html(optionsTemplate);
+
+					if (window.localStorage.getItem('orderAddressId') === null | window.localStorage.getItem('orderAddressId') === undefined) {
+						$('#order-address-' + orderAddresses[0].id).attr('selected', true);
+						$('#name').val(orderAddresses[0].fullname);
+						$('#email').val(orderAddresses[0].email);
+						$('#phone').val(orderAddresses[0].phone);
+						$('#address').val(orderAddresses[0].address);
+					}
+
+				},
+				error: function (error) {
+					console.log(error);
+				}
+			});
+
+			url = 'http://localhost:8080/api/items?itemIds=';
 			let items = JSON.parse(window.localStorage.getItem('items'));
 
 			if (items) {
@@ -227,6 +169,20 @@
 			}
 		});
 
+		$('#selectExistAddresses').change(() => {
+			let index = $('#selectExistAddresses').children("option:selected").val();
+
+			const orderAddress = orderAddresses.find((el) => {
+				return el.id == index;
+			});
+
+			$('#name').val(orderAddress.fullname);
+			$('#email').val(orderAddress.email);
+			$('#phone').val(orderAddress.phone);
+			$('#address').val(orderAddress.address);
+
+		});
+
 		function generateItem(item, itemStorage) {
 			let productTemplate = `
 			<tr>
@@ -244,6 +200,59 @@
 			return productTemplate;
 		}
 
+		$('#btnCheckout').click(() => {
+			let data = {
+				'orderAddressId': $('#selectExistAddresses').children("option:selected").val()
+			};
+
+			let url = host + '/api/orders?accessToken=' + window.localStorage.getItem('accessToken');
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				success: function (dataReturn) {
+					console.log(dataReturn);
+					checkout(dataReturn.id);
+				},
+				error: function (error) {
+					console.log(error);
+				}
+			});
+		});
+
+		function checkout(orderId) {
+			items = JSON.parse(window.localStorage.getItem('items'));
+
+			let data = [];
+
+			for (let item of items) {
+				data.push({
+					'itemId': item.id,
+					'quantity': item.quantity,
+					'orderId': orderId
+				});
+			}
+
+			let url = host + '/api/order-has-item?accessToken=' + window.localStorage.getItem('accessToken');
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				success: function (dataReturn) {
+					changeAndShowModalValue('Thành công', 'Đặt hàng thành công', false, 'redirectToHomePage()', 'Quay lại trang chủ');
+				},
+				error: function (error) {
+					changeAndShowModalValue('Lỗi', 'Có lỗi xảy ra, bạn vui lòng thử lại hoặc kiểm trả số lượng hàng!!!', true);
+				}
+			});
+		}
+		
+		function redirectToHomePage() {
+			window.localStorage.removeItem('items');
+			window.location.href = host + '/';
+		}
 	</script>
 </body>
 </html>

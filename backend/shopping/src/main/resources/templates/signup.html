@@ -23,6 +23,8 @@
     <!-- header -->
     <div th:insert="header :: header"></div>
 
+    <div th:replace="modal :: modal"></div>
+
     <div class="body">
         <div class="container" style="margin-top: 50px; margin-bottom: 50px">
             <div class="row">
@@ -81,11 +83,14 @@
                 data: account,
                 contentType: 'application/json',
                 success: function (data) {
-                    console.log('Signup Done');
-                    window.location.href = host + '/login';
+                    changeAndShowModalValue('Thành công', 'Tạo tài khoản thành công.', false);
                 },
                 error: function (error) {
-                    console.log(error);
+                    if (error.status) {
+                        changeAndShowModalValue('Lỗi', 'Email đã tồn tại', true);
+                    } else {
+                        changeAndShowModalValue('Lỗi', 'Xảy ra lỗi, mời thử lại', true);
+                    }
                 }
             });
         });

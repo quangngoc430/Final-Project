@@ -1,5 +1,7 @@
 package vn.edu.vnuk.shopping.model;
 
+import org.aspectj.weaver.ast.Or;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,9 +14,21 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Order")
-public class Order {
-    
+@Table(name = "Ordering")
+public class Ordering {
+
+    public Ordering() {}
+
+    public Ordering(Ordering order, OrderAddress orderAddress) {
+        this.id = order.id;
+        this.orderAddressId = order.orderAddressId;
+        this.accountId = order.accountId;
+        this.status = order.status;
+        this.createdAt = order.createdAt;
+        this.updatedAt = order.updatedAt;
+        this.orderAddress = orderAddress;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

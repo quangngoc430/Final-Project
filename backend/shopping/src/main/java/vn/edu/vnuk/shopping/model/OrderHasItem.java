@@ -5,8 +5,20 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "OrderHasItem")
+@Table(name = "Order_Has_Item")
 public class OrderHasItem {
+
+    public OrderHasItem() {}
+
+    public OrderHasItem(OrderHasItem orderHasItem, Item item) {
+        this.id = orderHasItem.id;
+        this.orderId = orderHasItem.orderId;
+        this.itemId = orderHasItem.itemId;
+        this.quantity = orderHasItem.quantity;
+        this.updatedAt = orderHasItem.updatedAt;
+        this.createdAt = orderHasItem.createdAt;
+        this.item = item;
+    }
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -22,8 +34,8 @@ public class OrderHasItem {
     private Long itemId;
 
     @NotNull
-    @Column(name = "DiscountPriceID")
-    private Long discountPriceId;
+    @Column(name = "Quantity")
+    private Long quantity;
 
     @Column(name = "CreatedAt")
     private Date createdAt;
@@ -32,7 +44,7 @@ public class OrderHasItem {
     private Date updatedAt;
 
     @Transient
-    private Order order;
+    private Ordering ordering;
 
     @Transient
     private Item item;
@@ -56,20 +68,18 @@ public class OrderHasItem {
         this.orderId = orderId;
     }
 
+    public Long getQuantity() {return quantity;}
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
     public Long getItemId() {
         return itemId;
     }
 
     public void setItemId(Long itemId) {
         this.itemId = itemId;
-    }
-
-    public Long getDiscountPriceId() {
-        return discountPriceId;
-    }
-
-    public void setDiscountPriceId(Long discountPriceId) {
-        this.discountPriceId = discountPriceId;
     }
 
     public Date getCreatedAt() {
@@ -88,12 +98,12 @@ public class OrderHasItem {
         this.updatedAt = updatedAt;
     }
 
-    public Order getOrder() {
-        return this.order;
+    public Ordering getOrder() {
+        return this.ordering;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrder(Ordering ordering) {
+        this.ordering = ordering;
     }
 
     public Item getItem() {
@@ -118,10 +128,10 @@ public class OrderHasItem {
                 "id=" + id +
                 ", orderId=" + orderId +
                 ", itemId=" + itemId +
-                ", discountPriceId=" + discountPriceId +
+                ", quantity=" + quantity +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                ", order=" + order +
+                ", order=" + ordering +
                 ", item=" + item +
                 ", discountPrice=" + discountPrice +
                 '}';

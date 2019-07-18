@@ -1,36 +1,38 @@
 const host = 'http://localhost:8080';
+let isLogin = false;
 
-function checkLogin(referenceUrl = null) {
-    $.ajax({
-        url: host + '/api/token?accessToken=' + window.localStorage.getItem('accessToken'),
-        type: 'GET',
-        contentType: 'application/json',
-        success: function (token) {
-            let account = {
-                'email': token.account.email,
-                'fullname': token.account.fullname,
-                'id': token.account.id
-            };
+async function checkLogin(referenceUrl = null) {
+    try {
+        const token = await $.ajax({
+            url: host + '/api/token?accessToken=' + window.localStorage.getItem('accessToken'),
+            type: 'GET',
+            contentType: 'application/json'
+        });
 
-            window.localStorage.setItem('account', JSON.stringify(account));
+        isLogin = true;
+        let account = {
+            'email': token.account.email,
+            'fullname': token.account.fullname,
+            'id': token.account.id
+        };
 
-            $('#nav-cart').attr('hidden', false);
-            $('#nav-user').attr('hidden', false);
-            $('#nav-logout').attr('hidden', false);
+        window.localStorage.setItem('account', JSON.stringify(account));
 
-            if (referenceUrl !== null) {
-                window.location.href = host + referenceUrl;
-            } else {
-                return true;
-            }
-        },
-        error: function (error) {
-            $('#nav-signin').attr("hidden", false);
-            $('#nav-signup').attr("hidden", false);
+        $('#nav-cart').attr('hidden', false);
+        $('#nav-user').attr('hidden', false);
+        $('#nav-logout').attr('hidden', false);
 
-            return false;
+        if (referenceUrl !== null) {
+            window.location.href = host + referenceUrl;
+        } else {
+            return true;
         }
-    });
+    } catch (error) {
+        $('#nav-signin').attr("hidden", false);
+        $('#nav-signup').attr("hidden", false);
+
+        return false;
+    }
 }
 
 $('#nav-logout').click(() => {

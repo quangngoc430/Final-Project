@@ -1,4 +1,5 @@
 function addItemToCart(itemId, quantity) {
+
     let items = JSON.parse(window.localStorage.getItem('items'));
 
     if (items === undefined || items === null) items = [];

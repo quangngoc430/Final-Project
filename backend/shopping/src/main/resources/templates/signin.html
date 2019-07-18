@@ -23,6 +23,8 @@
     <!-- header -->
     <div th:insert="header :: header"></div>
 
+    <div th:insert="modal :: modal"></div>
+
     <div class="body">
         <div class="container" style="margin-top: 50px; margin-bottom: 50px">
             <div class="row">
@@ -137,10 +139,15 @@
 
                 },
                 error: function (error) {
-                    console.log(error);
+                    changeAndShowModalValue('Lỗi', 'Email hoặc mật khẩu không chính xác!!!', true);
                 }
             });
         });
+
+        function closeModal() {
+            $('#modal').modal('hide');
+        }
+
     </script>
 </body>
 </html>

@@ -3,6 +3,7 @@ package vn.edu.vnuk.shopping.serviceImpl.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import vn.edu.vnuk.shopping.exception.account.AccountNotFoundException;
 import vn.edu.vnuk.shopping.exception.orderAddress.OrderAddressNotFoundException;
@@ -17,6 +18,7 @@ import vn.edu.vnuk.shopping.validation.OrderAddress.OrderAddressValidation;
 
 import javax.validation.groups.Default;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,15 +46,21 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     }
 
     @Override
-    public Page<OrderAddress> getAll(Long accountId, Pageable pageable) throws AccountNotFoundException {
+    public Page<OrderAddress> getAll(Pageable pageable) {
+        return orderAddressRepository.findAllBy(pageable);
+    }
+
+    @Override
+    public List<OrderAddress> getAll(Long accountId) throws AccountNotFoundException {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
 
         if (!accountOptional.isPresent()) throw new AccountNotFoundException(accountId);
 
-        return orderAddressRepository.findAllByAccontId(accountId, pageable);
+        return orderAddressRepository.findAllByAccountId(accountId);
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_NORMAL_USER')")
     public OrderAddress create(OrderAddress orderAddress) throws OrderAddressValidationException {
         orderAddressValidation.validate(orderAddress, Default.class);
 

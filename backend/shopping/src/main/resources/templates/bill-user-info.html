@@ -5,86 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title> Biker.vn - For Biker Lover </title>
 
-	<!-- CSS -->
-	<link rel="stylesheet" th:href="@{/css/bootstrap.css}">
-	<link rel="stylesheet" th:href="@{/css/main.css}">
-	<link rel="stylesheet" th:href="@{/css/commerce.css}">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/linearicons@1.0.1/dist/web-font/style.min.css">
-	<link rel="stylesheet" th:href="@{/css/nouislider.min.css}">
-	<link rel="stylesheet" th:href="@{/css/owl.carousel.css}">
-	<link rel="stylesheet" th:href="@{/css/themify-icons.css}">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
     <!-- Start Header Area -->
-	<header class="header">
-		<!-- Main Navigation -->
-		<div class="main_nav_container">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 ">
-						<div class="logo_container">
-							<a href="home.html"><img th:src="@{/img/logo2.jpg}"></a>
-						</div>
-						<nav class="navbar">
-							<ul class="navbar_menu">
-								<li><a th:href="@{/}">Home</a></li>
-								<li><a th:href="@{/category}">Category</a></li>
-								<li><a th:href="@{/blog}">What's New</a></li>
-								<li><a th:href="@{/contact}">contact</a></li>
-							</ul>
-							<ul class="navbar_user">
-								<li class="checkout">
-									<a th:href="@{/cart}">
-										<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-										<span id="checkout_items" class="checkout_items">2</span>
-									</a>
-								</li>
-							</ul>
-							<div class="hamburger_container">
-								<i class="fa fa-bars" aria-hidden="true"></i>
-							</div>
-						</nav>
-					</div>
-				</div>
-			</div>
-		</div>
-	</header>
-	<div class="hamburger_menu">
-		<div class="hamburger_close"><i class="fa fa-times" aria-hidden="true"></i></div>
-		<div class="hamburger_menu_content text-right">
-			<ul class="menu_top_nav">
-				<li class="menu_item"><a th:href="@{/}">Home</a></li>
-				<li class="menu_item"><a th:href="@{/category}">Category</a></li>
-				<li class="menu_item"><a th:href="@{/blog}">What's New</a></li>
-				<li class="menu_item"><a th:href="@{/contact}">contact</a></li>
-			</ul>
-		</div>
-	</div>
-	<!-- End Header Area -->
+	<div th:insert="header :: header"></div>
 
-	<!-- Start Banner Area -->
-	<section class="banner-area" th:style="'background-image: url(' + @{/img/banner/banner6.jpg} + ')'">
-		<div class="container">
-			<div class="banner-details d-flex flex-wrap align-items-center justify-content-center">
-				<div class="col-first">
-					<h1><span></span>Checkout</h1>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- End Banner Area -->
+	<div th:replace="modal :: modal"></div>
 
 	 <!--================Checkout Area =================-->
 	 <section class="checkout_area">
         <div class="container">
-            <div class="billing_details">
+			<div class="choose-or-create-bill">
 				<div class="row">
-					<div class="col-md-6 offset-md-3 my-5">
-						<h2 class="text-center">Billing Details</h2>
-						<form class="row contact_form" action="#" method="post" novalidate="novalidate">
+					<div class="col-md-6 offset-md-3 my-5"  style="background-color: #fff; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+						<div>
+							<label class="font-weight-bold">Choose options:</label>
+						</div>
+						<div class="custom-control custom-radio">
+							<input type="radio" id="selectChooseExistAddresses" name="customRadio" class="custom-control-input">
+							<label class="custom-control-label" for="selectChooseExistAddresses">Choose exist addresses</label>
+						</div>
+						<div class="custom-control custom-radio">
+							<input type="radio" id="selectCreateNewAddress" name="customRadio" class="custom-control-input">
+							<label class="custom-control-label" for="selectCreateNewAddress">Create new address</label>
+						</div>
+						<div>
+							<a class="btn btn-primary px-5 mt-4 float-right" style="color: white;" id="btnNext">Next</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <div class="billing_details" style="display: none;">
+				<div class="row">
+					<div class="col-md-6 offset-md-3 mb-5" style="background-color: #fff; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+						<h2 class="text-center">Address Details</h2>
+						<form class="row contact_form" action="#" method="post" novalidate="novalidate" >
 							<div class="col-md-12 form-group">
 								<label for="name" class=" col-form-label">Full name</label>
 								<input type="text" class="form-control" id="name" placeholder="Full Name">
@@ -109,72 +68,46 @@
         </div>
     </section>
 
-	<!-- Start footer Area -->
-	<footer class="footer-area section_gap">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6  col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h4>Contact Us</h4>
-						<p>
-							<p> Make by Star Catchers with love <br></p>
-							<p>Address :158A Le Loi <br></p>
-							<p>Phone : 0123456789 <br></p>
-							<p>Email :Biker@gmail.com</p>
-						</p>
-					</div>
-				</div>
-				<div class="col-lg-4  col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h4>Newsletter</h4>
-						<p>Stay update with our latest</p>
-						<div class="" id="mc_embed_signup">
+	<!-- Footer -->
+	<div th:insert="footer :: footer"></div>
 
-							<form target="_blank" novalidate="true" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
-							 method="get" class="form-inline">
-
-								<div class="d-flex flex-row">
-
-									<input class="form-control" name="EMAIL" placeholder="Enter Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Email '"
-									 required="" type="email">
-
-
-									<button class="click-btn btn btn-default"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
-									<div style="position: absolute; left: -5000px;">
-										<input tabindex="-1" value="" type="text">
-									</div>
-								</div>
-								<div class="info"></div>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-6 col-sm-6">
-					<div class="single-footer-widget">
-						<h4>Follow Us</h4>
-						<p>Let us be social</p>
-						<div class="footer-social d-flex align-items-center">
-							<a href="#"><i class="fa fa-facebook"></i></a>
-							<a href="#"><i class="fa fa-twitter"></i></a>
-							<a href="#"><i class="fa fa-instagram"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<!-- End footer Area -->
-
-	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script th:src="@{/js/main.js}"></script>
+	<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
 	<script th:src="@{/js/bootstrap.min.js}"></script>
-	<script th:src="@{/js/jquery-2.2.4.min.js}"></script>
-	<script th:src="@{/js/scroll.js}"></script>
+	<script th:src="@{/js/main.js}"></script>
 
 	<script>
+		let isOrderAddressCreated = false;
+
+		$(document).ready(() => {
+			checkLogin();
+			checkExistOrderAddress();
+		});
+
+		function checkExistOrderAddress() {
+			$.ajax({
+				url: host + '/api/order-addresses?accountId=' + window.localStorage.accountId + '&accessToken=' + window.localStorage.accessToken,
+				type: 'GET',
+				contentType: 'application/json',
+				success: function (dataResult) {
+					if (dataResult.length <= 0) {
+						$('#selectChooseExistAddresses').attr('disabled', true);
+						$('#selectCreateNewAddress').attr('checked', true);
+						clearFormAddressDetail();
+						$('.billing_details').show();
+					} else {
+						$('#selectChooseExistAddresses').attr('checked', true);
+					}
+				},
+				error: function (error) {
+					console.log(error);
+				}
+			});
+		}
+
 		function saveBillUserInfo() {
 			let userInfo = {
-				'name': $('#name').val(),
+				'fullname': $('#name').val(),
 				'email': $('#email').val(),
 				'phone': $('#phone').val(),
 				'address': $('#address').val()
@@ -182,7 +115,60 @@
 
 			window.localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-			window.location.href = 'http://localhost:8080/confirmation';
+			const url = host + '/api/order-addresses?accessToken=' + window.localStorage.accessToken;
+			const orderAddress = JSON.stringify(userInfo);
+
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: orderAddress,
+				contentType: 'application/json',
+				success: function (dataResult) {
+					isOrderAddressCreated = true;
+					$('#name').val('');
+					$('#email').val('');
+					$('#phone').val('');
+					$('#address').val('');
+
+					changeAndShowModalValue('Thành công', 'Tạo địa chỉ người nhận thành công', false);
+
+					window.localStorage.setItem('orderAddressId', dataResult.id);
+				},
+				error: function (error) {
+					console.log(error);
+				}
+			});
+
+
+		}
+
+		$('#selectChooseExistAddresses').change(() => {
+			$('.billing_details').hide();
+		});
+
+		$('#selectCreateNewAddress').change(() => {
+			clearFormAddressDetail();
+			$('.billing_details').show();
+		});
+
+		$('#btnNext').click(() => {
+
+
+			if ($('#selectCreateNewAddress').is(':checked')) {
+				if (!isOrderAddressCreated) {
+					changeAndShowModalValue('Lỗi', 'Chưa tồn tại địa chỉ người nhận, vui lòng tạo địa chỉ người nhận mới.', true);
+					return;
+				}
+			}
+
+			window.location.href = host + '/confirmation';
+		});
+
+		function clearFormAddressDetail() {
+			$('#name').val('');
+			$('#email').val('');
+			$('#phone').val('');
+			$('#address').val('');
 		}
 	</script>
 </body>

@@ -2,7 +2,7 @@ package vn.edu.vnuk.shopping.validation.Order;
 
 import org.springframework.stereotype.Component;
 import vn.edu.vnuk.shopping.exception.order.OrderValidationException;
-import vn.edu.vnuk.shopping.model.Order;
+import vn.edu.vnuk.shopping.model.Ordering;
 
 import javax.validation.*;
 import java.util.HashMap;
@@ -21,13 +21,13 @@ public class OrderValidationImpl implements OrderValidation {
     }
 
     @Override
-    public void validate(Order order, Class groupClassValidation) throws OrderValidationException {
-        Set<ConstraintViolation<Order>> constraintViolations = validator.validate(order, groupClassValidation);
+    public void validate(Ordering order, Class groupClassValidation) throws OrderValidationException {
+        Set<ConstraintViolation<Ordering>> constraintViolations = validator.validate(order, groupClassValidation);
 
         HashMap<String, String> errors = new HashMap<>();
 
         if(!constraintViolations.isEmpty()){
-            for(ConstraintViolation<Order> orderConstraintViolation : constraintViolations){
+            for(ConstraintViolation<Ordering> orderConstraintViolation : constraintViolations){
                 errors.put(orderConstraintViolation.getPropertyPath().toString(), orderConstraintViolation.getMessage());
             }
 
