@@ -37,20 +37,24 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-3 row">
-                        <label for="sort" class="col-md-4 my-auto">Sort : </label>
-                        <select class="form-control col-md-8 custom-select" name="sort" id="sort">
-                            <option value="id">ID</option>
-                            <option value="fullname">Fullname</option>
-                            <option value="email">Email</option>
-                            <option value="roleId">Role</option>
+                    <div class="form-group col-md-4 row">
+                        <label for="sort" class="col-md-3 my-auto">Sort : </label>
+                        <select class="form-control col-md-9 custom-select" name="sort" id="sort">
+                            <option value="id,asc">ID (ascending)</option>
+                            <option value="id,desc">ID (descending)</option>
+                            <option value="fullname,asc">Fullname (a-z)</option>
+                            <option value="fullname,desc">Fullname (z-a)</option>
+                            <option value="email,asc">Email (a-z)</option>
+                            <option value="email,desc">Email (z-a)</option>
+                            <option value="roleId,asc">Role (ascending)</option>
+                            <option value="roleId,desc">Role (descending)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="cart_inner">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover text-center">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">ID</th>
@@ -69,6 +73,7 @@
                 <nav aria-label="navigation mb-5">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" id="btnPrevious"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);"><span id="currentPage"></span> / <span id="totalPages"></span></a></li>
                         <li class="page-item" id="btnNext"><a class="page-link" href="javascript:void(0);">Next</a></li>
                     </ul>
                 </nav>
@@ -79,13 +84,13 @@
     <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/adminMain.js}"></script>
 
     <script>
         let keyword = '';
         let currentPage = 0;
         let totalPages = 0;
-        let sort = 'id';
+        let sort = 'id,asc';
         let size = 10;
 
         $(document).ready(() => {
@@ -103,7 +108,7 @@
             keyword = (params.hasOwnProperty('search')) ? params.search : '';
             page = (params.hasOwnProperty('page')) ? params.page : 0;
             size = (params.hasOwnProperty('size')) ? params.size : 20;
-            sort = (params.hasOwnProperty('sort')) ? params.sort : 'id';
+            sort = (params.hasOwnProperty('sort')) ? params.sort : 'id,asc';
 
             $('#search').val(keyword);
             $('#sort').val(sort);
@@ -150,7 +155,7 @@
         function rewriteUrl() {
             const url = host + '/admin/accounts?search=' + keyword +
                 '&page=' + currentPage + '&size=' + size +
-                '&sort=' + sort + '&accessToken=' + window.localStorage.accessToken;
+                '&sort=' + sort + '&accessToken=' + window.localStorage.adminAccessToken;
 
             history.replaceState(history.state, $(document).title, url);
         }
@@ -158,7 +163,7 @@
         function searchAccounts() {
             const url = host + '/api/accounts?keyword=' +
                 keyword + '&page=' + currentPage + '&size=' + size +
-                '&sort=' + sort + '&accessToken=' + window.localStorage.accessToken;
+                '&sort=' + sort + '&accessToken=' + window.localStorage.adminAccessToken;
 
             $.ajax({
                 url: url,
@@ -178,6 +183,8 @@
 
                     currentPage = Number(accounts.number);
                     totalPages = Number(accounts.totalPages);
+                    $('#currentPage').text(currentPage + 1);
+                    $('#totalPages').text(totalPages + 1);
 
                     rewriteUrl(keyword, page, size, sort);
                 },
@@ -188,7 +195,7 @@
         }
 
         function deleteAccount(accountId) {
-            const url = host + '/api/accounts/' + accountId + '?accessToken=' + window.localStorage.accessToken;
+            const url = host + '/api/accounts/' + accountId + '?accessToken=' + window.localStorage.adminAccessToken;
 
             $.ajax({
                 url: url,
@@ -230,8 +237,8 @@
                             <h5>${account.roleId}</h5>
                         </td>
                         <td>
-                            <a href="${host}/api/item/${account.id}"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                            <a href="javascript:void(0);" onclick="deleteAccount(${account.id})"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                            <a href="${host}/admin/account/${account.id}" style="color: #ffc107; font-size: 30px;"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                            <a href="javascript:void(0);" onclick="deleteAccount(${account.id})" style="color: #dc3545; font-size: 30px; margin-left: 2px;"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         </td>
                     </tr>`;
 

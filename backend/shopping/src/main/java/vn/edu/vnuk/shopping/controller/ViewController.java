@@ -89,6 +89,12 @@ public class ViewController {
         return "item";
     }
 
+    @GetMapping(value = "/items")
+    public String items(Model model) {
+        model.addAttribute("categories", categoryService.getAll("", new PageRequest(0, 20)));
+        return "items";
+    }
+
     @GetMapping(value = "/items-bill-info")
     public String itemsBillInfo() {
         return "bill-user-info";
@@ -115,13 +121,28 @@ public class ViewController {
         return "admin/home";
     }
 
+    @GetMapping(value = "admin/item/{id}")
+    public String adminItem(@PathVariable("id") Long id,
+                            Model model) {
+        model.addAttribute("id", id);
+        return "admin/item";
+    }
+
     @GetMapping(value = "/admin/items")
     public String adminItems() {
         return "admin/items";
+    }
+
+    @GetMapping(value = "/admin/account/{id}")
+    public String adminAccount(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("id", id);
+        return "admin/account";
     }
 
     @GetMapping(value = "/admin/accounts")
     public String adminAccounts() {
         return "admin/accounts";
     }
+
+
 }

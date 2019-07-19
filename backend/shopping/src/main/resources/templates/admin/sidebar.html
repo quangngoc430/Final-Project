@@ -1,18 +1,29 @@
 <nav id="sidebar" xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
     <div class="sidebar-header">
-        <a href="home.html"><img src="../../static/img/logo2.jpg"></a>
+        <a th:href="@{/admin}"><img th:src="@{/images/logo.png}" style="width: 100%;" alt=""/></a>
     </div>
 
     <ul class="list-unstyled components">
         <p>Admin Management</p>
-        <li class="active">
+        <li id="sidebar-account">
             <a th:href="@{/admin/accounts}">Accounts</a>
         </li>
-        <li>
+        <li id="sidebar-items">
             <a th:href="@{/admin/items}">Items</a>
         </li>
-        <li>
-            <a th:href="@{/admin/logout}">Logout</a>
+        <li onclick="logout()">
+            <a href="javascript:void(0);" class="sidebar-logout">Logout</a>
         </li>
     </ul>
+
+    <script>
+        function logout() {
+            window.localStorage.removeItem('adminAccount');
+            window.localStorage.removeItem('adminAccessToken');
+            window.localStorage.removeItem('adminAccountId');
+            window.localStorage.removeItem('adminRoleId');
+
+            window.location.href = host + '/admin/login';
+        }
+    </script>
 </nav>

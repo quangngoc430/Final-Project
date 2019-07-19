@@ -23,16 +23,40 @@
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
-                                <th scope="col">Product</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Total</th>
+                                <th scope="col" class="text-center">Product</th>
+                                <th scope="col" class="text-center">Quantity</th>
+                                <th scope="col" class="text-center">Price</th>
+                                <th scope="col" class="text-center">Total</th>
                             </tr>
                         </thead>
                         <tbody id="table-order-items">
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <div style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+                <h2 class="text-center">Order address</h2>
+                <form class="row" action="javascript:void(0);">
+                    <div class="col-md-6 offset-3">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" class="form-control name" readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" class="form-control email" readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="text" id="phone" class="form-control phone" readonly/>
+                        </div>
+                        <div class="formt-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" class="form-control address" readonly/>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -61,9 +85,44 @@
                 contentType: 'application/json',
                 success: function (orderHasItemsResutl) {
 
+                    let totalPrice = 0;
+
                     for (let orderHasItem of orderHasItemsResutl.content) {
+                        totalPrice = totalPrice + Number(orderHasItem.quantity) * Number(orderHasItem.item.price);
                         $('#table-order-items').append(generateOrderHasItem(orderHasItem));
                     }
+
+                    let totalTemplate = `
+                    <tr>
+                        <td colspan="3"><h4 class="ml-5">Total</h4></td>
+                        <td>
+                            <p style="margin-bottom: 0px !important;">
+                                <span class="product-price-total">${totalPrice}</span>đ
+                            </p>
+                        </td>
+                    </tr>`;
+
+                    $('#table-order-items').append(totalTemplate);
+
+                    pricesWithCommas('.product-price');
+                    pricesWithCommas('.product-price-total');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+
+            url = host + '/api/orders/' + orderId + '?accessToken=' + window.localStorage.getItem('accessToken');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (orderResult) {
+
+                    $('#name').val(orderResult.orderAddress.fullname);
+                    $('#email').val(orderResult.orderAddress.email);
+                    $('#phone').val(orderResult.orderAddress.phone);
+                    $('#address').val(orderResult.orderAddress.address);
                 },
                 error: function (error) {
                     console.log(error);
@@ -83,10 +142,19 @@
                             </div>
                         </div>
                     </td>
-                    <td>${orderHasItem.quantity}</td>
-                    <td>${orderHasItem.item.price}</td>
-                    <td>${Number(orderHasItem.quantity) * Number(orderHasItem.item.price)}</td>
+                    <td class="align-middle text-center">${orderHasItem.quantity}</td>
+                    <td class="align-middle text-center"><p style="margin-bottom: 0px !important;"><span class="product-price">${orderHasItem.item.price}</span>đ</p></td>
+                    <td class="align-middle text-center"><p style="margin-bottom: 0px !important;"><span class="product-price-total">${Number(orderHasItem.quantity) * Number(orderHasItem.item.price)}</span>đ</p></td>
                 </tr>`;
+        }
+
+        function pricesWithCommas(selector) {
+            let prices = $(selector);
+            for (let index = 0; index < prices.length; index ++) {
+                price = prices[index];
+                priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                price.textContent = priceContent;
+            }
         }
 
     </script>

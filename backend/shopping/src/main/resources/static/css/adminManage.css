@@ -10,8 +10,7 @@
 form {
   padding: 15px; }
   form .form-group {
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eeeeee; }
+    padding-bottom: 10px; }
     form .form-group label {
       font-weight: 500; }
     form .form-group .custom-file label {
@@ -50,7 +49,7 @@ a, a:hover, a:focus {
   left: 0;
   height: 100vh;
   z-index: 999;
-  background: #7386D5;
+  background: #343a40;
   color: #fff;
   transition: all 0.3s; }
   @media (max-width: 768px) {
@@ -65,7 +64,8 @@ a, a:hover, a:focus {
     background: #6d7fcc; }
   #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #47748b; }
+    /*border-bottom: 1px solid #47748b;*/
+    }
   #sidebar ul p {
     color: #fff;
     padding: 10px; }
@@ -77,8 +77,8 @@ a, a:hover, a:focus {
     color: #7386D5;
     background: #fff; }
   #sidebar ul li.active > a, #sidebar ul li a[aria-expanded="true"] {
-    color: #fff;
-    background: #6d7fcc; }
+    color: #343a40;
+    background: #fff; }
   #sidebar ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;

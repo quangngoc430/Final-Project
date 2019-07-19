@@ -5,9 +5,9 @@
         </div>
 
         <div class="nav navbar-nav mx-auto">
-            <form th:if="${#httpServletRequest.requestURI == '/'}" style="width: 600px;">
+            <form th:if="${#httpServletRequest.requestURI == '/'}" style="width: 600px;" action="javascript:void(0);">
                 <div class="input-group">
-                    <input class="form-control red-border" type="text" placeholder="Search" aria-label="Search">
+                    <input class="form-control red-border" type="text" placeholder="Search" id="search">
                     <div class="input-group-append">
                         <span class="input-group-text red lighten-3" id="basic-text1"><i class="fa fa-search text-grey" aria-hidden="true"></i></span>
                     </div>

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.vnuk.shopping.exception.account.AccountNotFoundException;
 import vn.edu.vnuk.shopping.exception.common.UnauthorizedException;
+import vn.edu.vnuk.shopping.exception.order.OrderNotFoundException;
 import vn.edu.vnuk.shopping.exception.token.TokenIsExpiredException;
 import vn.edu.vnuk.shopping.exception.token.TokenNotFoundException;
 import vn.edu.vnuk.shopping.model.Ordering;
@@ -35,6 +36,15 @@ public class OrderController {
         return new ResponseEntity<>(orderService.create(order), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/orders/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> getOne(@PathVariable(name = "id") Long orderId,
+                                    @RequestParam("accessToken") String accessToken,
+                                    HttpServletRequest request) throws TokenIsExpiredException, AccountNotFoundException, TokenNotFoundException, UnauthorizedException, OrderNotFoundException {
+        commonService.authenticate(accessToken, request);
+
+        return new ResponseEntity<>(orderService.getOne(orderId), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/api/orders", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> getAll(@RequestParam("accountId") Long accountId,
                                     @RequestParam("accessToken") String accessToken,
@@ -46,4 +56,6 @@ public class OrderController {
             return new ResponseEntity<>(orderService.getAllByAccountId(accountId, pageable), HttpStatus.OK);
         return new ResponseEntity<>(orderService.getAll(pageable), HttpStatus.OK);
     }
+
+
 }

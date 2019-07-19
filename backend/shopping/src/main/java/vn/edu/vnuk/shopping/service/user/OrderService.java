@@ -2,6 +2,7 @@ package vn.edu.vnuk.shopping.service.user;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import vn.edu.vnuk.shopping.exception.order.OrderNotFoundException;
 import vn.edu.vnuk.shopping.model.Ordering;
 
 public interface OrderService {
@@ -11,4 +12,6 @@ public interface OrderService {
     Page<Ordering> getAllByAccountId(Long accountId, Pageable pageable);
 
     Page<Ordering> getAll(Pageable pageable);
+
+    Ordering getOne(Long orderId) throws OrderNotFoundException;
 }

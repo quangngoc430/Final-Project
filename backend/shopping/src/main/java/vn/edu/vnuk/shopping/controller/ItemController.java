@@ -2,7 +2,9 @@ package vn.edu.vnuk.shopping.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,10 @@ import vn.edu.vnuk.shopping.exception.category.CategoryNotFoundException;
 import vn.edu.vnuk.shopping.exception.item.ItemNotFoundException;
 import vn.edu.vnuk.shopping.exception.item.ItemValidationException;
 import vn.edu.vnuk.shopping.model.Item;
+import vn.edu.vnuk.shopping.repository.RatingRepository;
 import vn.edu.vnuk.shopping.service.admin.AdminItemService;
 import vn.edu.vnuk.shopping.service.user.ItemService;
+import vn.edu.vnuk.shopping.service.user.RatingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +31,21 @@ public class ItemController {
     @Autowired
     private AdminItemService adminItemService;
 
+    @Autowired
+    private RatingRepository ratingRepository;
+
     @GetMapping(value = "/api/items-suggestion", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Page<Item>> getItemsSuggestion(
             @RequestParam(name = "size", required = false) Long size,
             @RequestParam(name = "accountId", required = false) Long accountId,
             Pageable pageable) {
         // TODO: check rating exist => best buy
+        // check has at least one rating
+
+        if (accountId == null || ratingRepository.findAllByAccountId(accountId).size() == 0) {
+            Pageable sortByUpdatedAt = PageRequest.of(0, 4, Sort.by("updatedAt").descending());
+            return new ResponseEntity<>(itemService.getAll("", sortByUpdatedAt), HttpStatus.OK);
+        }
 
         final String uri = "http://localhost:5000/user/" + accountId + "?size=" + size;
 

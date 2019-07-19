@@ -16,4 +16,6 @@ public interface OauthAccessTokenRepository extends CrudRepository<OauthAccessTo
            "ON token.accountId = account.id " +
            "Where token.accessToken = :accessToken")
     OauthAccessToken getByAccessToken(@Param("accessToken") String accessToken);
+
+    void deleteAllByAccountId(Long accountId);
 }

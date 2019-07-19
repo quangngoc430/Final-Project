@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body class="body" style="background-color: #f0f0f0;">
+
+    <!-- header -->
+    <div th:insert="header :: header"></div>
+
+    <div>
+        <div class="wrap mb-10" style="margin: 50px">
+            <div class="search-box row mb-5">
+                <input type="text" class="form-control offset-2 col-md-8 search" id="search" placeholder="Please enter text to search"/>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-4 offset-md-1 row">
+                    <label for="sort" class="col-md-4 my-auto">Category :</label>
+                    <select class="form-control col-md-8 custom-select" name="category" id="category">
+                        <option value="0">All</option>
+                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3 row">
+                    <label for="size" class="col-md-4 my-auto">Size : </label>
+                    <select class="form-control col-md-8 custom-select" name="size" id="size">
+                        <option value="12">12</option>
+                        <option value="16">16</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3 row">
+                    <label for="sort" class="col-md-4 my-auto">Sort : </label>
+                    <select class="form-control col-md-8 custom-select" name="sort" id="sort">
+                        <option value="id,asc">ID (tăng dần)</option>
+                        <option value="id,desc">ID (giảm dần)</option>
+                        <option value="name,asc">Name (a-z)</option>
+                        <option value="name,desc">Name (z-a)</option>
+                        <option value="price,asc">Price (tăng dần)</option>
+                        <option value="price,desc">Price (giảm dần)</option>
+                        <option value="updatedAt,asc">Date (mới nhất)</option>
+                        <option value="updatedAt,desc">Date (cũ nhất)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="items" class="row mt-5">
+
+            </div>
+
+            <div class="mt-5">
+                <nav aria-label="navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);" id="btnPrevious">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);"><span id="currentPage"></span>/<span id="totalPages"></span></a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);" id="btnNext">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <!-- Footer -->
+
+    <div th:insert="footer :: footer"></div>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+    <script>
+        let keyword = '', size = 20, page = 0, sort = 'id', categoryId = 0, totalPages = 0;
+        $(window).ready(() => {
+            checkLogin();
+            resizeProductImage();
+
+            const queryParams = $(location).attr('search').replace('?', '').split('&');
+            let params = {};
+
+            for (let queryParam of queryParams) {
+                queryParam = queryParam.split('=');
+                const key = queryParam[0];
+                const value = queryParam[1];
+
+                params[key] = value;
+            }
+
+            keyword = (params.hasOwnProperty('keyword')) ? params.keyword : '';
+            size = (params.hasOwnProperty('size')) ? params.size : 20;
+            page = (params.hasOwnProperty('page')) ? params.page : 0;
+            sort = (params.hasOwnProperty('sort')) ? params.sort : 'id,asc';
+            categoryId = (params.hasOwnProperty('categoryId')) ? params.categoryId : 0;
+
+            $('#search').val(keyword);
+            $('#category').val(categoryId);
+            $('#size').val(size);
+            $('#sort').val(sort);
+
+            search();
+        });
+
+        $(window).on('resize', function(){
+            resizeProductImage();
+        });
+
+        $('#search').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                keyword =  $('#search').val();
+                page = 0;
+                search();
+            }
+        });
+
+        $('#category').change(() => {
+           categoryId = $('#category').val();
+           page = 0;
+           search();
+        });
+
+        $('#size').change(() => {
+           size = $('#size').val();
+           page = 0;
+           search();
+        });
+
+        $('#sort').change(() => {
+            sort = $('#sort').val();
+            page = 0;
+            search();
+        });
+
+        function search() {
+
+            let url = host + `/api/items?keyword=${keyword}&size=${size}&sort=${sort}&page=${page}`;
+
+            if (categoryId != 0) {
+                url = url + '&categoryId=' + categoryId;
+            }
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (itemsResult) {
+                    let itemsHTML = '';
+
+                    for (let item of itemsResult.content) {
+                        itemsHTML = itemsHTML + (generateItem(item));
+                    }
+
+                    if (itemsHTML.length > 0) {
+                        $('#items').html(itemsHTML);
+                    } else {
+                        $('#items').html('<div class="col-md-12"><p class="text-center" style="font-size: 40px;">Không tìm thấy sản phẩm.</p></div>');
+                    }
+
+                    pricesWithCommas();
+                    resizeProductImage();
+                    rewriteUrl();
+
+                    page = Number(itemsResult.number);
+                    totalPages = Number(itemsResult.totalPages);
+
+                    if (page >= totalPages) {
+                        $('#btnNext').parent().addClass('disabled');
+                    }
+
+                    if (page <= 0) {
+                        $('#btnPrevious').parent().addClass('disabled');
+                    }
+
+                    $('#currentPage').text(page + 1);
+                    $('#totalPages').text(totalPages + 1);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        $('#btnPrevious').click(() => {
+           if (page > 0) {
+               page = page - 1;
+               $('#btnNext').parent().removeClass('disabled');
+               search();
+           }
+        });
+
+        $('#btnNext').click(() => {
+           if (page < totalPages) {
+               page = page + 1;
+               $('#btnPrevious').parent().removeClass('disabled');
+               search();
+           }
+        });
+
+
+        function pricesWithCommas() {
+            let prices = $('.product-price');
+            for (let index = 0; index < prices.length; index ++) {
+                price = prices[index];
+                priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                price.textContent = priceContent;
+            }
+        }
+
+        function resizeProductImage() {
+            let productImageWidth = $('.product-image').width();
+            $('.product-image').height(productImageWidth);
+        }
+
+        function generateItem(item) {
+            let itemTemplate = `<div class="product col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <div class="card h-100" style="padding: 0px;">
+                        <a >
+                            <img src="${item.imageURLs}" class="product-image" height="150" style="margin: 0px; width: 100%;">
+                        </a>
+                        <div class="card-body border-top">
+                            <a href="${host + '/item/' + item.id}" style="text-decoration: none;">
+                                <h5 class="card-title">${item.name.substring(0, 39)}</h5>
+                            </a>
+
+                            <ul style="margin-left: -20px;" class="product-infos">`;
+
+            let index = 0;
+            for (let info of item.infos.split('||')) {
+                if (index >=  3) {
+                    break;
+                }
+
+                itemTemplate = itemTemplate + `<li class="card-text" style="font-size: 12px;">${info}</li>`;
+
+                index = index + 1;
+            }
+
+            itemTemplate= itemTemplate + `</ul>
+
+                            <p class="card-text align-bottom">Price: <span class="product-price">${item.price}</span>đ</p>
+                            <a class="form-control btn btn-danger align-self-end" style="margin-top: auto; color: #fff;" href="${host + '/item/' + item.id}">View detail</a>
+                        </div>
+                    </div>
+                </div>`;
+
+            return itemTemplate;
+        }
+
+        function rewriteUrl() {
+            const url = host + '/items?keyword=' + keyword + '&page=' + page + '&size=' + size + '&sort=' + sort + '&categoryId=' + categoryId;
+            history.replaceState(history.state, $(document).title, url);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User info</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/adminManage.css}">
+</head>
+<body>
+
+    <style>
+        span.error {
+            color: red;
+            font-style: italic;
+            font-size: 12px;
+        }
+    </style>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <div th:insert="admin/sidebar :: sidebar"></div>
+
+        <div th:replace="modal :: modal"></div>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="container">
+                <div >
+                    <form id="form-signup"
+                          class="p-5 row"
+                          style="background-color: #fff;  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07);"
+                          action="javascript:void(0);">
+
+                        <p class="h4 text-center col-12">Item info</p>
+
+                        <div class="form-group mt-2 col-4">
+                            <label for="id">ID :</label>
+                            <input type="text" name="id" id="id" class="form-control" placeholder="ID" readonly>
+                        </div>
+
+                        <div class="form-group mt-2 col-4">
+                            <label for="price">Price :</label>
+                            <input type="text" name="price" id="price" class="form-control" placeholder="Price">
+                            <span class="error"></span>
+                        </div>
+
+                        <div class="form-group mt-2 col-4">
+                            <label for="amount">Amount :</label>
+                            <input type="text" name="price" id="amount" class="form-control" placeholder="amount">
+                            <span class="error"></span>
+                        </div>
+
+                        <div class="form-group mt-2 col-12">
+                            <label for="name">Name :</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                            <span class="error"></span>
+                        </div>
+
+                        <div class="form-group mt-2 col-12">
+                            <label for="imageURLs">Image url :</label>
+                            <input type="text" name="imageURLs" id="imageURLs" class="form-control" placeholder="imageURLs">
+                            <span class="error"></span>
+                        </div>
+
+                        <div class="mt-2 col-12">
+                            <div class="align-items-center">
+                                <label class="align-middle" style="margin-bottom: 0px; font-weight: 500;">Infos</label>
+                                <p style="color: #28a745; display: inline; font-size: 25px;" class="ml-3 align-middle" onclick="addInfoBox('');">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </p>
+                            </div>
+                            <div class="row infos-group" id="infos-group">
+                            </div>
+                        </div>
+
+                        <a href="javascript:void(0);" class="form-control btn btn-primary my-4" id="btnSubmit" style="color: #fff;">Update</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+    <script th:src="@{/js/adminMain.js}"></script>
+
+    <script th:inline="javascript">
+        let isChangePassword = false;
+        /*<![CDATA[*/
+
+        const itemId = /*[[${id}]]*/ null;
+
+        /*]]>*/
+
+        $(document).ready(() => {
+            checkLogin();
+            getItemInfo();
+            validate();
+        });
+
+        $('#btnSubmit').click(function() {
+            if (!$('#form-signup').valid()) return;
+
+            const accessToken = window.localStorage.adminAccessToken;
+
+            let account = {
+                "email": $('#email').val(),
+                "fullname": $('#fullname').val()
+            };
+
+            if (!$('#newPassword-group').attr('hidden')) {
+                isChangePassword = true;
+                account['newPassword'] = $('#newPassword').val();
+            }
+
+            $.ajax({
+                url: host + `/api/accounts/${accountId}?accessToken=${accessToken}`,
+                type: 'PUT',
+                data: JSON.stringify(account),
+                contentType: 'application/json',
+                success: function (data) {
+                    changeAndShowModalValue('Thành công', 'Thay đổi thông tin tài khoản thành công', false);
+                },
+                error: function (error) {
+                    changeAndShowModalValue('Lỗi', 'Có lỗi xảy ra, mời thử lại!!!', true);
+                }
+            });
+        });
+
+        let infosCount = 0;
+
+        function addInfoBox(info) {
+            $('#infos-group').append(`
+                <div class="form-group mt-2 col-6" id="info-${infosCount}" class="info">
+                    <div class="input-group">
+                        <input class="form-control red-border" type="text" placeholder="Info" value="${info}">
+                        <div class="input-group-append">
+                            <span class="input-group-text red lighten-3" style="color: red;" onclick="deleteInfo(${infosCount});">
+                                <i class="fa fa-trash text-grey" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>`);
+
+            infosCount = infosCount + 1;
+        }
+
+        function deleteInfo(id) {
+            $('#info-' + id).remove();
+        }
+
+        function loginAgain() {
+            window.localStorage.clear();
+            window.location.href = host + '/login';
+        }
+
+        $('#btn-change-password').click(() => {
+            $('#newPassword-group').attr('hidden', !$('#newPassword-group').attr('hidden'));
+            $('#reNewPassword-group').attr('hidden', !$('#reNewPassword-group').attr('hidden'));
+        });
+
+        function validate() {
+            $.validator.addMethod(
+                "regex",
+                function(value, element, regex) {
+                    var check = false;
+                    return this.optional(element) || regex.test(value);
+                },
+                "Please check your input."
+            );
+
+            $("#form-signup").validate({
+                errorElement: 'span',
+                rules: {
+                    fullname: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 40
+                    },
+                    email: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 40,
+                        regex: /^[a-zA-Z0-9._]+\@gmail.com/
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 40,
+                        regex: /^[a-zA-Z0-9]+/
+                    },
+                    newPassword: {
+                        minlength: 8,
+                        maxlength: 40,
+                        regex: /^[a-zA-Z0-9]+/
+                    },
+                    reNewPassword: {
+                        equalTo: "#newPassword"
+                    }
+                },
+                messages: {
+                    fullname: {
+                        required: 'Please input fullname',
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required'
+                    },
+                    email: {
+                        required: 'Please input email',
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Email must have template ^[a-zA-Z0-9._]+\\@gmail.com'
+                    },
+                    password: {
+                        required: 'Please input password',
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Password must have template ^[a-zA-Z0-9]+'
+                    },
+                    newPassword: {
+                        minlength: 'Minimum 8 characters required',
+                        maxlength: 'Maximum 40 characters required',
+                        regex: 'Email must have template ^[a-zA-Z0-9]+'
+                    },
+                    reNewPassword: {
+                        equalTo: 'Confirm new password must be the same new password'
+                    }
+                }
+            });
+        }
+
+        function getItemInfo() {
+            $.ajax({
+                url: host + `/api/items/${itemId}?accessToken=` + window.localStorage.adminAccessToken,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (item) {
+
+                    $('#id').val(item.id);
+                    $('#name').val(item.name);
+                    $('#price').val(item.price);
+                    $('#amount').val(item.amout);
+                    $('#imageURLs').val(item.imageURLs);
+
+                    let infos = item.infos.split(' || ');
+
+                    for (let info of infos) {
+                        addInfoBox(info);
+                    }
+                },
+                error: function (error) {
+                    $('#nav-signin').attr("hidden", false);
+                    $('#nav-signup').attr("hidden", false);
+
+                    return false;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -44,12 +44,12 @@
         </div>
 
         <div class="wrap mb-10" style="margin: 50px">
-            <div th:each="items, iter : ${itemsList}" class="row">
+            <div th:each="items, iter : ${itemsList}" class="row mb-5">
 
                 <div class="col-md-12 clear-fix">
                     <h3 class="float-left category-name" th:text="${categories.get(iter.index).name}"></h3>
                     <h6 class="float-right">
-                        <a th:href="@{'/category/' + ${categories.get(iter.index).id}}">More</a>
+                        <a th:href="@{'/items?categoryId=' + ${categories.get(iter.index).id}}">More</a>
                     </h6>
                 </div>
 
@@ -151,6 +151,13 @@
 
             window.localStorage.setItem('items', JSON.stringify(items));
         }
+
+        $('#search').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                window.location.href = host + '/items?keyword=' + $('#search').val();
+            }
+        });
     </script>
 </body>
 </html>

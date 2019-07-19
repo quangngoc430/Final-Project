@@ -53,7 +53,7 @@
 
                 <div class="cart_inner">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover text-center">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">ID</th>
@@ -72,6 +72,7 @@
                 <nav aria-label="navigation mb-5">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" id="btnPrevious"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);"><span id="currentPage"></span> / <span id="totalPages"></span></a></li>
                         <li class="page-item" id="btnNext"><a class="page-link" href="javascript:void(0);">Next</a></li>
                     </ul>
                 </nav>
@@ -82,7 +83,7 @@
     <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/adminMain.js}"></script>
 
     <script>
         let keyword = '';
@@ -177,6 +178,8 @@
 
                     currentPage = Number(items.number);
                     totalPages = Number(items.totalPages);
+                    $('#currentPage').text(currentPage + 1);
+                    $('#totalPages').text(totalPages + 1);
 
                     rewriteUrl(keyword, page, size, sort);
                 },
@@ -187,7 +190,7 @@
         }
 
         function deleteItem(itemId) {
-            const url = host + '/api/items/' + itemId + '?accessToken=' + window.localStorage.accessToken;
+            const url = host + '/api/items/' + itemId + '?accessToken=' + window.localStorage.adminAccessToken;
 
             $.ajax({
                 url: url,
@@ -229,8 +232,8 @@
                             <h5>${item.amount}</h5>
                         </td>
                         <td>
-                            <a href="${host}/api/item/${item.id}"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                            <a href="javascript:void(0);" onclick="deleteItem(${item.id})"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                            <a href="${host}/admin/item/${item.id}" style="color: #ffc107; font-size: 30px;"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                            <a href="javascript:void(0);" onclick="deleteItem(${item.id})" style="color: #dc3545; font-size: 30px; margin-left: 2px;"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         </td>
                     </tr>`;
 

@@ -92,6 +92,9 @@
                             itemStorage = items.find(el => {return el.id == item.id});
                             $('#table-products').append(generateItem(item, itemStorage));
                         }
+
+                        pricesWithCommas('.product-price');
+                        pricesWithCommas('.product-total-price');
                     },
                     error: function (error) {
                         console.log(error);
@@ -126,6 +129,15 @@
             </tr>`;
         }
 
+        function pricesWithCommas(selector) {
+            let prices = $(selector);
+            for (let index = 0; index < prices.length; index ++) {
+                price = prices[index];
+                priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                price.textContent = priceContent;
+            }
+        }
+
         function generateItem(item, itemStorage) {
             let productTemplate = `<tr id="item-${item.id}">
                     <td>
@@ -144,10 +156,10 @@
                         </div>
                     </td>
                     <td class="align-middle">
-                        <h5 class="product-price">${item.price}</h5>
+                        <h5><p class="product-price" style="display: inline;">${item.price}</p>đ</h5>
                     </td>
                     <td class="align-middle">
-                        <h5 class="product-total-price">${item.price * itemStorage.quantity}đ</h5>
+                        <h5><p class="product-total-price" style="display: inline;">${item.price * itemStorage.quantity}</p>đ</h5>
                     </td>
                     <td class="align-middle text-center">
                         <a style="font-size: 25px;" onclick="removeItemIntoLocalStorage(${item.id});">

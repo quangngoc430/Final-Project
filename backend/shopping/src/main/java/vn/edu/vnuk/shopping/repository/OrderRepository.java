@@ -24,4 +24,11 @@ public interface OrderRepository extends CrudRepository<Ordering, Long> {
            "INNER JOIN OrderAddress orderAddress " +
            "ON ordering.orderAddressId = orderAddress.id")
     Page<Ordering> getAllBy(Pageable pageable);
+
+    @Query("SELECT new vn.edu.vnuk.shopping.model.Ordering(ordering, orderAddress) " +
+           "FROM Ordering ordering " +
+           "INNER JOIN OrderAddress orderAddress " +
+           "ON ordering.orderAddressId = orderAddress.id " +
+           "WHERE ordering.id = :id")
+    Ordering getById(@Param("id") Long id);
 }

@@ -38,8 +38,8 @@
                     </div>                    
                 </div>
                 <div class="col-md-4">
-                    <h3 th:text="${'Giá bán: ' + item.price + 'đ'}"></h3>
-                    <h3>Số lượng: <p id="item-amount" style="display: inline" th:text="${item.amount}"></p></h3>
+                    <h3>Giá bán: <p class="product-price" style="display: inline;" th:text="${item.price}"></p>đ</h3>
+                    <h3>Số lượng: <p id="item-amount" style="display: inline;" th:text="${item.amount}"></p></h3>
 
                     <div class="mt-5">
                         <div th:replace="please-login :: please-login(message='Đăng nhập để mua hàng.')"></div>
@@ -190,7 +190,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -221,6 +220,8 @@
 
         $(document).ready(async function () {
             await checkLogin();
+
+            pricesWithCommas('.product-price');
 
             itemAmount = Number($('#item-amount').val());
 
@@ -274,8 +275,14 @@
                 }
             });
 
+            let url = host + '/api/items-suggestion';
+
+            if (window.localStorage.accountId != null) {
+                url = url + '?accountId=' + window.localStorage.getItem('accountId') + '&size=4';
+            }
+
             $.ajax({
-                url: host + '/api/items-suggestion?accountId=' + window.localStorage.getItem('accountId') + '&size=4',
+                url: url,
                 type: 'GET',
                 contentType: 'application/json',
                 success: function (items) {
@@ -283,7 +290,7 @@
                         $('#related-products').append(generateItem(item));
                     }
 
-                    pricesWithCommas();
+                    pricesWithCommas('.product-price');
 
                     console.log('done');
                 },
@@ -456,8 +463,8 @@
             return text;
         }
 
-        function pricesWithCommas() {
-            let prices = $('.product-price');
+        function pricesWithCommas(selector) {
+            let prices = $(selector);
             for (let index = 0; index < prices.length; index ++) {
                 price = prices[index];
                 priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");

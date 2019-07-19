@@ -18,7 +18,7 @@
 
     <div class="wrapper">
         <!-- Sidebar  -->
-        <div th:insert="admin/sidebar :: sidebar"></div>
+        <div th:replace="admin/sidebar :: sidebar"></div>
 
         <!-- Page Content  -->
         <div id="content">
@@ -48,7 +48,7 @@
     <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/adminMain.js}"></script>
 </body>
 
 </html>

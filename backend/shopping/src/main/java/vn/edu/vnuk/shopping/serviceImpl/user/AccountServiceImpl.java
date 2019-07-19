@@ -15,16 +15,19 @@ import vn.edu.vnuk.shopping.exception.account.AccountValidationException;
 import vn.edu.vnuk.shopping.exception.email.EmailIsExitException;
 import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.repository.AccountRepository;
+import vn.edu.vnuk.shopping.repository.OauthAccessTokenRepository;
 import vn.edu.vnuk.shopping.service.user.AccountService;
 import vn.edu.vnuk.shopping.validation.account.AccountValidation;
 import vn.edu.vnuk.shopping.validation.account.GroupCreateAccount;
 import vn.edu.vnuk.shopping.validation.account.GroupUpdateAccount;
 import vn.edu.vnuk.shopping.validation.account.GroupUpdateAccountPassword;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
@@ -35,6 +38,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountValidation accountValidation;
+
+    @Autowired
+    private OauthAccessTokenRepository oauthAccessTokenRepository;
 
     @Override
     public Account create(Account account) throws EmailIsExitException, AccountValidationException {
@@ -84,11 +90,25 @@ public class AccountServiceImpl implements AccountService {
         Account oldAccount = accountOptional.get();
         oldAccount.setFullname(account.getFullname());
 
-        if (account.getPassword() != null)
+        boolean isDeleteToken = false;
+
+        if (account.getPassword() != null) {
             if (!passwordEncoder.matches(account.getPassword(), oldAccount.getPassword()))
                 throw new AccountPasswordIsIncorrectException(account.getPassword());
-            else
+            else {
                 oldAccount.setPassword(passwordEncoder.encode(account.getNewPassword()));
+                isDeleteToken = true;
+            }
+        } else {
+          if (getAccountLogin().getRoleId() == Define.ROLE_ADMIN && account.getNewPassword() != null) {
+              oldAccount.setPassword(passwordEncoder.encode(account.getNewPassword()));
+              isDeleteToken = true;
+          }
+        }
+
+        if (isDeleteToken) {
+            oauthAccessTokenRepository.deleteAllByAccountId(oldAccount.getId());
+        }
 
         oldAccount.setUpdatedAt(new Date());
 

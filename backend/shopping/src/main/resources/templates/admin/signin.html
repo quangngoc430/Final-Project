@@ -121,10 +121,9 @@
                     console.log(token);
 
                     if (token.account.roleId === 1) {
-                        window.localStorage.setItem('accessToken', token.accessToken);
-                        window.localStorage.setItem('accountId', token.accountId);
-                        window.localStorage.setItem('roleId', token.account.roleId);
-
+                        window.localStorage.setItem('adminAccessToken', token.accessToken);
+                        window.localStorage.setItem('adminAccountId', token.accountId);
+                        window.localStorage.setItem('adminRoleId', token.account.roleId);
 
                         window.location.href = host + '/admin';
                     }
