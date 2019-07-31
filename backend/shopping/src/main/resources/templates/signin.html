@@ -7,7 +7,7 @@
     <title>Login</title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
@@ -44,9 +44,9 @@
                     <button class="btn btn-primary btn-block my-4" type="submit" id="btnLogin">Sign in</button>
 
                     <div class="d-flex justify-content-around">
-                        <p class="text-center">Not a member? <a href="">Register</a></p>
+                        <p class="text-center">Not a member? <a th:href="@{/signup}">Register</a></p>
                         <div>
-                            <a href="">Forgot password?</a>
+                            <a th:href="@{/account/forgot-password}">Forgot password?</a>
                         </div>
                     </div>
 
@@ -87,7 +87,7 @@
                         required: true,
                         minlength: 8,
                         maxlength: 40,
-                        regex: /^[a-zA-Z0-9._]+\@gmail.com/
+                        regex: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
                     },
                     password: {
                         required: true,
@@ -101,13 +101,13 @@
                         required: 'Please input email',
                         minlength: 'Minimum 8 characters required',
                         maxlength: 'Maximum 40 characters required',
-                        regex: 'Email must have template ^[a-zA-Z0-9._]+\\@gmail.com'
+                        regex: 'Format error email'
                     },
                     password: {
                         required: 'Please input password',
                         minlength: 'Minimum 8 characters required',
                         maxlength: 'Maximum 40 characters required',
-                        regex: 'Email must have template ^[a-zA-Z0-9]+'
+                        regex: 'Password contains only uppercase, lowercase and number'
                     }
                 }
             });
@@ -122,11 +122,21 @@
                 "password": $('#password').val()
             });
             $.ajax({
-                url: 'http://localhost:8080/api/login',
+                url: host + '/api/login',
                 type: 'POST',
                 data: account,
                 contentType: 'application/json',
                 success: function (token) {
+                    if (token.account.status === STATUS_DEACTIVE_ACCOUNT) {
+                        changeAndShowModalValue('Error', 'Account is inactive, please check email to activate account', true);
+                        return;
+                    }
+
+                    if (token.account.status === STATUS_DELETE_ACCOUNT) {
+                        changeAndShowModalValue('Error', 'Account not found', true);
+                        return;
+                    }
+
                     console.log(token);
 
                     window.localStorage.setItem('accessToken', token.accessToken);
@@ -139,7 +149,7 @@
 
                 },
                 error: function (error) {
-                    changeAndShowModalValue('Lỗi', 'Email hoặc mật khẩu không chính xác!!!', true);
+                    changeAndShowModalValue('Error', 'Email or password is incorrect!!!', true);
                 }
             });
         });

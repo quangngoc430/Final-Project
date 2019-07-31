@@ -37,6 +37,10 @@ public class OrderHasItem {
     @Column(name = "Quantity")
     private Long quantity;
 
+    @NotNull
+    @Column(name = "Price")
+    private Long price;
+
     @Column(name = "CreatedAt")
     private Date createdAt;
 
@@ -72,6 +76,22 @@ public class OrderHasItem {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
+    public Ordering getOrdering() {
+        return ordering;
+    }
+
+    public void setOrdering(Ordering ordering) {
+        this.ordering = ordering;
     }
 
     public Long getItemId() {

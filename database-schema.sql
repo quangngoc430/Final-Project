@@ -19,11 +19,11 @@ CREATE TABLE `Account`
 	`Password` VARCHAR(2048),
 	`Fullname` VARCHAR(80),
 	`RoleID` INT NOT NULL,
-	`Status` INT NOT NULL,
+	`Status` INT NOT NULL DEFAULT 0,
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`RoleID`) REFERENCES `Role`(`ID`)
+	FOREIGN KEY (`RoleID`) REFERENCES `Role`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `OAuthAccessToken` 
@@ -33,11 +33,11 @@ CREATE TABLE `OAuthAccessToken`
 	`Expires` INT,
 	`ExpiredAt` DATETIME NOT NULL,
 	`AccountID` INT NOT NULL,
-	`Status` INT NOT NULL,
+	`Status` INT NOT NULL DEFAULT 0,
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`)
+	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Category` 
@@ -60,11 +60,12 @@ CREATE TABLE `Item`
 	`Infos` TEXT,
 	`Technical_Infos` TEXT,
 	`Description` VARCHAR(5000),
+	`Status` INT NOT NULL DEFAULT 0,
 	`CategoryID` INT NOT NULL,
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`CategoryID`) REFERENCES `Category`(`ID`)
+	FOREIGN KEY (`CategoryID`) REFERENCES `Category`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Rating`
@@ -77,8 +78,8 @@ CREATE TABLE `Rating`
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`),
-	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`)
+	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`) ON DELETE CASCADE,
+	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Item_Has_Category`
@@ -89,7 +90,7 @@ CREATE TABLE `Item_Has_Category`
 	`CreatedAt` datetime,
 	`UpdatedAt` datetime,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`CategoryID`) REFERENCES `Category`(`ID`)
+	FOREIGN KEY (`CategoryID`) REFERENCES `Category`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Comment` 
@@ -101,8 +102,8 @@ CREATE TABLE `Comment`
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`),
-	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`)
+	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`) ON DELETE CASCADE,
+	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `OrderAddress` 
@@ -119,7 +120,7 @@ CREATE TABLE `OrderAddress`
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`)
+	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Ordering` 
@@ -127,12 +128,12 @@ CREATE TABLE `Ordering`
 	`ID` INT NOT NULL AUTO_INCREMENT,
 	`OrderAddressID` INT NOT NULL,
 	`AccountID` INT NOT NULL,
-	`Status` INT NOT NULL,
+	`Status` INT NOT NULL DEFAULT 0,
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`OrderAddressID`) REFERENCES `OrderAddress`(`ID`),
-	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`)
+	FOREIGN KEY (`OrderAddressID`) REFERENCES `OrderAddress`(`ID`) ON DELETE CASCADE,
+	FOREIGN KEY (`AccountID`) REFERENCES `Account`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Order_Has_Item` 
@@ -141,11 +142,12 @@ CREATE TABLE `Order_Has_Item`
 	`OrderID` INT NOT NULL,
 	`ItemID` INT NOT NULL,
 	`Quantity` INT NOT NULL,
+	`Price` INT NOT NULL,
 	`CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`ID`),
-	FOREIGN KEY (`OrderID`) REFERENCES `Ordering`(`ID`),
-	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`)
+	FOREIGN KEY (`OrderID`) REFERENCES `Ordering`(`ID`) ON DELETE CASCADE,
+	FOREIGN KEY (`ItemID`) REFERENCES `Item`(`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Category
@@ -267,6 +269,8 @@ INSERT INTO Account(Email, Password, Fullname, RoleID, Status) VALUES ("Mathilde
 INSERT INTO Account(Email, Password, Fullname, RoleID, Status) VALUES ("XzavierHaley@gmail.com", "$2a$10$ZW5X4KC5GKvmUYcvgVF2yezD9GCvIZUXjypOOIHU4EO5hcLPYMrpO", "Xzavier Haley", "2", "1");
 INSERT INTO Account(Email, Password, Fullname, RoleID, Status) VALUES ("DeontaeStokes@gmail.com", "$2a$10$ZW5X4KC5GKvmUYcvgVF2yezD9GCvIZUXjypOOIHU4EO5hcLPYMrpO", "Deontae Stokes", "2", "1");
 INSERT INTO Account(Email, Password, Fullname, RoleID, Status) VALUES ("MyrlKrajcik@gmail.com", "$2a$10$ZW5X4KC5GKvmUYcvgVF2yezD9GCvIZUXjypOOIHU4EO5hcLPYMrpO", "Myrl Krajcik", "2", "1");
+
+Update Account set Status = 0;
 
 -- Item -- 
 INSERT INTO Item(Name, Price, Amount, Warranty, ImageURLs, Infos, Technical_Infos, CategoryID) VALUES ("LAPTOP ACER PREDATOR HELIOS 300 PH315 52 7688 (Core i7 9750H, Ram 16 GB, SSD 256GB, 15.6 FHD, VGA 6G, WIN 10)", "44990000", "11", "12 tháng", "https://philong.com.vn/media/product/19662-helios-300-ph315-52-031.png", "CPU: Core i7 9750H || Ram: 16GB DDR4  || SSD: 256 GB  || Màn hình: 15.6 FHD || VGA: NVIDIA RTX  2060 6GB || Os: Windows 10 home  64-bit", "[{'value': '\xa0Intel® Core™ i7-9750H (2.6GHz up to 4.5GHz, 12MB Cache)', 'title': 'CPU'}, {'value': '\xa016GB DDR4-2666MHz , (2 Slots, up to 32GB)', 'title': '\xa0RAM'}, {'value': '\n\xa0256GB SSD M.2 PCIe\xa0(nâng cấp tối đa 1TB SSD PCIe NVMe và 2TB HDD)\n\xa0(2 khe, nâng cấp tối đa 1TB SSD PCIe NVMe RAI0)\n', 'title': '\xa0Ổ cứng'}, {'value': '\xa0None', 'title': '\xa0CD/DVD'}, {'value': '\xa0NVIDIA GeForce® GTX 2060 6GB GDDR6', 'title': '\xa0Card VGA'}, {'value': '\xa015.6-inch Full HD 144Hz (1920 x 1080) IPS', 'title': '\xa0Màn hình'}, {'value': '\xa0802.11a/b/g/n/ac wireless LAN\xa0\xa0+ Bluetooth 5.0', 'title': '\xa0Kết nối'}, {'value': '1 x USB Type C (thunderbolt)2 x USB 3.1 gen 11 x USB 3.1 gen 2(with power off charging)1 x Mini Display port\xa01 x HDMI1 x Headset/speaker jack', 'title': '\xa0Tích hợp'}, {'value': '\xa02.4 Kg', 'title': '\xa0Trọng lượng'}, {'value': '59Wh Li-ion battery', 'title': '\xa0Pin'}, {'value': '\xa0Windows 10 Home', 'title': '\xa0Hệ điều hành'}]", 1);

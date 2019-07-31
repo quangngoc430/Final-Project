@@ -3,28 +3,51 @@ package vn.edu.vnuk.shopping.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.vnuk.shopping.define.Define;
 import vn.edu.vnuk.shopping.exception.category.CategoryNotFoundException;
 import vn.edu.vnuk.shopping.exception.item.ItemNotFoundException;
+import vn.edu.vnuk.shopping.exception.token.TokenIsExpiredException;
+import vn.edu.vnuk.shopping.exception.token.TokenNotFoundException;
+import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.model.Category;
 import vn.edu.vnuk.shopping.model.Item;
+import vn.edu.vnuk.shopping.model.OauthAccessToken;
+import vn.edu.vnuk.shopping.repository.AccountRepository;
+import vn.edu.vnuk.shopping.repository.CategoryRepository;
+import vn.edu.vnuk.shopping.repository.OauthAccessTokenRepository;
 import vn.edu.vnuk.shopping.service.user.CategoryService;
 import vn.edu.vnuk.shopping.service.user.ItemService;
+import vn.edu.vnuk.shopping.service.user.TokenService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
 public class ViewController {
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private CategoryService categoryService;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping(value = {"/", "/home"})
     public String home(Model model) throws CategoryNotFoundException {
@@ -105,11 +128,66 @@ public class ViewController {
         return "confirmation";
     }
 
+    @GetMapping(value = "/account/forgot-password")
+    public String forgotPassword() {
+        return "forgot-password";
+    }
+
+    @PostMapping(value = "/api/reset-password", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> resetPassword(@RequestParam("token") String token,
+                                           @RequestBody Account account) throws TokenIsExpiredException, TokenNotFoundException {
+        OauthAccessToken accessToken = tokenService.get(token);
+
+        Account oldAccount = accessToken.getAccount();
+        oldAccount.setPassword(passwordEncoder.encode(account.getPassword()));
+        accountRepository.save(oldAccount);
+
+        tokenService.delete(token);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/account/reset-password")
+    public String resetPassword() {
+        return "reset-password";
+    }
+
     @GetMapping(value = "/account")
     public String account() {
         return "account";
     }
 
+
+    @GetMapping(value = "/account/{id}/activate")
+    public String accountActive(@PathVariable("id") Long id,
+                                @RequestParam("token") String accessToken,
+                                Model model) {
+        boolean isSuccess;
+        Long status;
+        try {
+            OauthAccessToken oauthAccessToken = tokenService.get(accessToken);
+            isSuccess = true;
+            status = Define.STATUS_ACTIVATE_SUCCESS;
+            Account account = accountRepository.findById(oauthAccessToken.getAccountId()).get();
+            account.setStatus(Define.STATUS_ACTIVATE_SUCCESS);
+            account.setUpdatedAt(new Date());
+            accountRepository.save(account);
+            tokenService.delete(accessToken);
+        } catch (TokenNotFoundException e) {
+            isSuccess = false;
+            status = Define.STATUS_ACTIVATE_TOKEN_NOT_FOUND;
+            e.printStackTrace();
+        } catch (TokenIsExpiredException e) {
+            isSuccess = false;
+            status = Define.STATUS_ACTIVATE_TOKEN_IS_EXPIRED;
+            e.printStackTrace();
+        }
+
+        model.addAttribute("isSuccess", isSuccess);
+        model.addAttribute("status", status);
+
+        return "activate";
+    }
 
     @GetMapping(value = "/admin/login")
     public String adminLogin() {
@@ -121,9 +199,16 @@ public class ViewController {
         return "admin/home";
     }
 
-    @GetMapping(value = "admin/item/{id}")
+    @GetMapping(value = "/admin/item/new")
+    public String adminItemNew(Model model) {
+        model.addAttribute("categories", categoryService.getAll("", PageRequest.of(0, 100)).getContent());
+        return "admin/item";
+    }
+
+    @GetMapping(value = "/admin/item/{id}")
     public String adminItem(@PathVariable("id") Long id,
                             Model model) {
+        model.addAttribute("categories", categoryService.getAll("", PageRequest.of(0, 100)).getContent());
         model.addAttribute("id", id);
         return "admin/item";
     }

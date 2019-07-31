@@ -11,6 +11,7 @@ import vn.edu.vnuk.shopping.model.Account;
 import vn.edu.vnuk.shopping.model.OauthAccessToken;
 import vn.edu.vnuk.shopping.model.Rating;
 import vn.edu.vnuk.shopping.repository.RatingRepository;
+import vn.edu.vnuk.shopping.service.user.AccountService;
 import vn.edu.vnuk.shopping.service.user.RatingService;
 import vn.edu.vnuk.shopping.service.user.TokenService;
 
@@ -27,6 +28,9 @@ public class RatingServiceImpl implements RatingService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private AccountService accountService;
+
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_NORMAL_USER')")
     public Rating create(Rating ratingParam, String accessToken) throws TokenIsExpiredException, TokenNotFoundException, RatingIsExistException {
@@ -38,7 +42,9 @@ public class RatingServiceImpl implements RatingService {
             ratingParam.setAccountId(account.getId());
             ratingParam.setCreatedAt(new Date());
             ratingParam.setUpdatedAt(new Date());
-            return ratingRepository.save(ratingParam);
+            ratingParam = ratingRepository.save(ratingParam);
+            ratingParam.setAccount(accountService.getAccountLogin());
+            return ratingParam;
         } else {
             throw new RatingIsExistException(rating.getId());
         }

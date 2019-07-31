@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> Biker.vn - For Biker Lover </title>
+    <title>Order address</title>
 
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -130,7 +130,7 @@
 					$('#phone').val('');
 					$('#address').val('');
 
-					changeAndShowModalValue('Thành công', 'Tạo địa chỉ người nhận thành công', false);
+					changeAndShowModalValue('Success', 'Create order address successfully', false);
 
 					window.localStorage.setItem('orderAddressId', dataResult.id);
 				},
@@ -156,7 +156,7 @@
 
 			if ($('#selectCreateNewAddress').is(':checked')) {
 				if (!isOrderAddressCreated) {
-					changeAndShowModalValue('Lỗi', 'Chưa tồn tại địa chỉ người nhận, vui lòng tạo địa chỉ người nhận mới.', true);
+					changeAndShowModalValue('Error', 'Ops!!! Order address isn\'t exist, please create order address.', true);
 					return;
 				}
 			}

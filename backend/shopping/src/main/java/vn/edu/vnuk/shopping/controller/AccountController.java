@@ -58,6 +58,8 @@ public class AccountController {
         return new ResponseEntity<>(accountService.getOne(id), HttpStatus.OK);
     }
 
+
+
     @JsonView(View.Public.class)
     @PutMapping(value = "/api/accounts/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id,

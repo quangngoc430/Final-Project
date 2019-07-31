@@ -7,7 +7,7 @@
     <title>Home</title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body class="body" style="background-color: #f0f0f0;">
@@ -41,14 +41,14 @@
                 <div class="form-group col-md-3 row">
                     <label for="sort" class="col-md-4 my-auto">Sort : </label>
                     <select class="form-control col-md-8 custom-select" name="sort" id="sort">
-                        <option value="id,asc">ID (tăng dần)</option>
-                        <option value="id,desc">ID (giảm dần)</option>
+                        <option value="id,asc">ID (ascending)</option>
+                        <option value="id,desc">ID (descending)</option>
                         <option value="name,asc">Name (a-z)</option>
                         <option value="name,desc">Name (z-a)</option>
-                        <option value="price,asc">Price (tăng dần)</option>
-                        <option value="price,desc">Price (giảm dần)</option>
-                        <option value="updatedAt,asc">Date (mới nhất)</option>
-                        <option value="updatedAt,desc">Date (cũ nhất)</option>
+                        <option value="price,asc">Price (ascending)</option>
+                        <option value="price,desc">Price (descending)</option>
+                        <option value="updatedAt,asc">Date (newest)</option>
+                        <option value="updatedAt,desc">Date (oldest)</option>
                     </select>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <nav aria-label="navigation">
                     <ul class="pagination justify-content-center">
                         <li class="page-item"><a class="page-link" href="javascript:void(0);" id="btnPrevious">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="javascript:void(0);"><span id="currentPage"></span>/<span id="totalPages"></span></a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);" style="width: 100%;"><span id="currentPage"></span>/<span id="totalPages"></span></a></li>
                         <li class="page-item"><a class="page-link" href="javascript:void(0);" id="btnNext">Next</a></li>
                     </ul>
                 </nav>
@@ -162,7 +162,7 @@
                     if (itemsHTML.length > 0) {
                         $('#items').html(itemsHTML);
                     } else {
-                        $('#items').html('<div class="col-md-12"><p class="text-center" style="font-size: 40px;">Không tìm thấy sản phẩm.</p></div>');
+                        $('#items').html('<div class="col-md-12"><p class="text-center" style="font-size: 40px;">No Items.</p></div>');
                     }
 
                     pricesWithCommas();

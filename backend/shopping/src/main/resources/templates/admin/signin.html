@@ -113,7 +113,7 @@
                 "password": $('#password').val()
             });
             $.ajax({
-                url: 'http://localhost:8080/api/login',
+                url: host + '/api/login',
                 type: 'POST',
                 data: account,
                 contentType: 'application/json',

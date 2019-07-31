@@ -45,8 +45,10 @@ public class AdminItemServiceImpl implements AdminItemService {
         oldItem.setAmount(item.getAmount());
         oldItem.setDescription(item.getDescription());
         oldItem.setImageURLs(item.getImageURLs());
+        oldItem.setInfos(item.getInfos());
         oldItem.setPrice(item.getPrice());
         oldItem.setUpdatedAt(new Date());
+        oldItem.setCategoryId(item.getCategoryId());
 
         return itemRepository.save(oldItem);
     }

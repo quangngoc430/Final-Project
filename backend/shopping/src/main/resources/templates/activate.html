@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User info</title>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/index.css}" rel="stylesheet">
+</head>
+<body>
+
+<style>
+    span.error {
+        color: red;
+        font-style: italic;
+        font-size: 12px;
+    }
+</style>
+
+<!-- header -->
+<div th:insert="header :: header"></div>
+
+<div th:replace="modal :: modal"></div>
+
+<h1 th:if="${isSuccess}">SUCCESS</h1>
+<h1 th:unless="${isSuccess}">FAIL</h1>
+
+<!-- Footer -->
+<div th:insert="footer :: footer"></div>
+
+<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

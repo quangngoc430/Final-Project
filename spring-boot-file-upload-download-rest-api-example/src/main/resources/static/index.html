@@ -3,41 +3,99 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
         <title>Spring Boot File Upload / Download Rest API Example</title>
-        <link rel="stylesheet" href="/css/main.css" />
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     </head>
     <body>
-        <noscript>
-            <h2>Sorry! Your browser doesn't support Javascript</h2>
-        </noscript>
-        <div class="upload-container">
-            <div class="upload-header">
-                <h2>Spring Boot File Upload / Download Rest API Example</h2>
-            </div>
-            <div class="upload-content">
-                <div class="single-upload">
-                    <h3>Upload Single File</h3>
-                    <form id="singleUploadForm" name="singleUploadForm">
-                        <input id="singleFileUploadInput" type="file" name="file" class="file-input" required />
-                        <button type="submit" class="primary submit-btn">Submit</button>
-                    </form>
-                    <div class="upload-response">
-                        <div id="singleFileUploadError"></div>
-                        <div id="singleFileUploadSuccess"></div>
+        <div class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-                <div class="multiple-upload">
-                    <h3>Upload Multiple Files</h3>
-                    <form id="multipleUploadForm" name="multipleUploadForm">
-                        <input id="multipleFileUploadInput" type="file" name="files" class="file-input" multiple required />
-                        <button type="submit" class="primary submit-btn">Submit</button>
-                    </form>
-                    <div class="upload-response">
-                        <div id="multipleFileUploadError"></div>
-                        <div id="multipleFileUploadSuccess"></div>
+                    <div class="modal-body">
+                        <div class="single-upload">
+                            <h3>Upload Single File</h3>
+                            <form id="singleUploadForm" name="singleUploadForm">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="singleFileUploadInput">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                </div>
+                            </form>
+                            
+                            <div class="upload-response">
+                                <div id="singleFileUploadError" hidden></div>
+                                <div id="singleFileUploadSuccess" hidden>
+                                    <form>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="imageUploadUrl">
+                                            <div class="input-group-append" style="cursor: pointer;">
+                                                <span class="input-group-text">Copy to clickboard</span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btn-upload" id="btnUpload">Upload</button>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="/js/main.js" ></script>
+
+        <script>
+            let btnUpload = $('#btnUpload');
+            let singleFileUploadInput = $('#singleFileUploadInput');
+            let singleFileUploadError = $('#singleFileUploadError');
+            let singleFileUploadSuccess = $('#singleFileUploadSuccess');
+
+
+            function uploadSingleFile(file) {
+                let formData = new FormData();
+                formData.append("file", file);
+
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "/uploadFile");
+
+                xhr.onload = function() {
+                    console.log(xhr.responseText);
+                    let response = JSON.parse(xhr.responseText);
+                    if(xhr.status == 200) {
+                        singleFileUploadError.attr('hidden', true);
+                        $('#imageUploadUrl').val(response.fileDownloadUri);
+                        singleFileUploadSuccess.attr('hidden', false);
+                    } else {
+                        singleFileUploadSuccess.attr('hidden', true)
+                        singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+                        singleFileUploadError.attr('hidden', false);
+                    }
+                }
+
+                xhr.send(formData);
+            }
+
+            btnUpload.click((event) => {
+                let files = singleFileUploadInput[0].files;
+                if(files.length === 0) {
+                    singleFileUploadError.innerHTML = "Please select a file";
+                    singleFileUploadError.style.display = "block";
+                }
+                uploadSingleFile(files[0]);
+                event.preventDefault();
+            });
+
+            $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
     </body>
 </html>

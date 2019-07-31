@@ -9,7 +9,7 @@
     <title>Collapsible sidebar using Bootstrap 4</title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/adminManage.css}">
 </head>
@@ -37,19 +37,23 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-3 row">
-                        <label for="sort" class="col-md-4 my-auto">Sort : </label>
-                        <select class="form-control col-md-8 custom-select" name="sort" id="sort">
-                            <option value="id">ID</option>
-                            <option value="name">Name</option>
-                            <option value="price">Price</option>
-                            <option value="amount">Amount</option>
+                    <div class="form-group col-md-4 row">
+                        <label for="sort" class="col-md-3 my-auto">Sort : </label>
+                        <select class="form-control col-md-9 custom-select" name="sort" id="sort">
+                            <option value="id,asc">ID (ascending)</option>
+                            <option value="id,desc">ID (descending)</option>
+                            <option value="name,asc">Name (a-z)</option>
+                            <option value="name,desc">Name (z-a)</option>
+                            <option value="price,asc">Price (ascending)</option>
+                            <option value="price,desc">Price (descending)</option>
+                            <option value="amount,asc">Amount (ascending)</option>
+                            <option value="amount,desc">Amount (descending)</option>
                         </select>
                     </div>
+                    <div class="form-group col-md-2">
+                        <a class="btn btn-success" th:href="@{/admin/item/new}">New</a>
+                    </div>
                 </div>
-
-
-
 
                 <div class="cart_inner">
                     <div class="table-responsive">
@@ -89,7 +93,7 @@
         let keyword = '';
         let currentPage = 0;
         let totalPages = 0;
-        let sort = 'id';
+        let sort = 'id,asc';
         let size = 10;
 
         $(document).ready(() => {
@@ -107,7 +111,7 @@
             keyword = (params.hasOwnProperty('search')) ? params.search : '';
             page = (params.hasOwnProperty('page')) ? params.page : 0;
             size = (params.hasOwnProperty('size')) ? params.size : 20;
-            sort = (params.hasOwnProperty('sort')) ? params.sort : 'id';
+            sort = (params.hasOwnProperty('sort')) ? params.sort : 'id,asc';
 
             $('#search').val(keyword);
             $('#sort').val(sort);

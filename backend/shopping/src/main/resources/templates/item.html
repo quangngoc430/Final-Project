@@ -7,7 +7,7 @@
     <title th:text="${item.name}"></title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
@@ -38,8 +38,8 @@
                     </div>                    
                 </div>
                 <div class="col-md-4">
-                    <h3>Giá bán: <p class="product-price" style="display: inline;" th:text="${item.price}"></p>đ</h3>
-                    <h3>Số lượng: <p id="item-amount" style="display: inline;" th:text="${item.amount}"></p></h3>
+                    <h3>Price: <p class="product-price" style="display: inline;" th:text="${item.price}"></p>đ</h3>
+                    <h3>Amount: <p id="item-amount" style="display: inline;" th:text="${item.amount}"></p></h3>
 
                     <div class="mt-5">
                         <div th:replace="please-login :: please-login(message='Đăng nhập để mua hàng.')"></div>
@@ -48,7 +48,7 @@
                             <input class="form-control ml-5" type="number" name="quantity"
                                    style="width: 50%; display: inline-block;"
                                    th:min="1" th:max="${item.amount}" th:value="1" id="item-quantity"/>
-                            <div class="form-control btn btn-success mt-2 btn-add-to-cart" id="btn-add-item-to-cart">THÊM VÀO GIỎ HÀNG</div>
+                            <div class="form-control btn btn-success mt-2 btn-add-to-cart" id="btn-add-item-to-cart">Add to cart</div>
                         </div>
                     </div>
 
@@ -57,17 +57,17 @@
                 <div class="col-md-3">
                     <strong>Trợ giúp:</strong>
                     <ul style="margin: 15px 0px 25px -20px;">
-                        <li style="font-size: 14px;">Hướng dẫn mua hàng nhanh chóng</li>
-                        <li style="font-size: 14px;">Chính sách bảo hành tại Phi Long</li>
-                        <li style="font-size: 14px;">Chính sách đổi, trả lại hàng</li>
+                        <li style="font-size: 14px;">How to order</li>
+                        <li style="font-size: 14px;">Techshop warranty policy</li>
+                        <li style="font-size: 14px;">Policy for returning</li>
                     </ul>
 
-                    <strong>Điện thoại tư vấn - đặt hàng:</strong>
+                    <strong>Contact:</strong>
                     <ul style="margin: 15px 0px 25px -20px;">
                         <li style="font-size: 14px;">Ngọc: 0905098365</li>
                     </ul>
 
-                    <strong>Địa chỉ mua hàng:</strong>
+                    <strong>Shop's address:</strong>
                     <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2041.6355107916193!2d108.2194426003638!3d16.070220815262317!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31421836b46f422b%3A0x463eab6243ccd7a7!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBOZ2_huqFpIG5n4buvIC0gxJBIIMSQw6AgTuG6tW5nIChDxqEgc-G7nyAyKQ!5e0!3m2!1svi!2sus!4v1557686927984!5m2!1svi!2sus" height="250px" width="250px" frameborder="0" style="border:0" allowfullscreen></iframe>
                 </div>
             </div>
@@ -75,7 +75,7 @@
             <div class="row" style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07);">
                 
                 <div class="col-md-12" style="padding: 30px 0px 0px 15px;">
-                    <h2>Sản phẩm tương tự</h2>
+                    <h2>Items recommended for you</h2>
                 </div>
 
                 <div class="col-md-12" style="margin: 0px 0px 20px 0px;"><hr/></div>
@@ -312,24 +312,24 @@
 
             if (item) {
                 if (item.quantity + quantity > amount) {
-                    changeAndShowModalValue('Lỗi', 'Có lỗi xảy ra, không đủ sản phẩm!', true);
+                    changeAndShowModalValue('Error', 'Ops!!! Something wrong, Not enough items!', true);
                     return;
                 }
             } else{
                 if (quantity > amount) {
-                    changeAndShowModalValue('Lỗi', 'Có lỗi xảy ra, không đủ sản phẩm!', true);
+                    changeAndShowModalValue('Error', 'Ops!!! Something wrong, Not enough items!', true);
                     return;
                 }
             }
 
             if (item === undefined || item === null) {
-                changeAndShowModalValue('Thành công', 'Thêm sản phẩm thành công!', false);
+                changeAndShowModalValue('Success', 'Add new items successfully!', false);
                 items.push({
                     'id': itemId,
                     'quantity': Number(quantity)
                 });
             } else {
-                changeAndShowModalValue('Thành công', 'Thêm sản phẩm thành công!', false);
+                changeAndShowModalValue('Success', 'Add new items successfully!', false);
                 item.quantity = Number(item.quantity) + Number(quantity);
             }
 
@@ -358,13 +358,15 @@
                     data: JSON.stringify(data),
                     contentType: 'application/json',
                     success: function (rating) {
-                        changeAndShowModalValue('Thành công', 'Gửi đánh giá thành công!!!', false);
+                        changeAndShowModalValue('Success', 'Send review successfully!!!', false);
+
+                        addRating(rating);
 
                         console.log('done');
                     },
                     error: function (error) {
 
-                        changeAndShowModalValue('Lỗi', 'Có lỗi xảy ra, gửi đánh giá thất bại. Mời thử lại!!!', true);
+                        changeAndShowModalValue('Error', 'Ops!!! something wrong, send review fail. Try again!!!', true);
                         console.log(error);
                     }
                 });
@@ -377,12 +379,12 @@
                     success: function (rating) {
                         $(`#rating-comment-${rating.id}`).text(rating.comment);
 
-                        changeAndShowModalValue('Thành công', 'Chỉnh sửa đánh giá thành công!!!', false);
+                        changeAndShowModalValue('Success', 'Edit review successfully!!!', false);
 
                         console.log('done');
                     },
                     error: function (error) {
-                        changeAndShowModalValue('Lỗi', 'Có lỗi xảy ra, chỉnh sửa đánh giá thất bại. Mời thử lại!!!', true);
+                        changeAndShowModalValue('Error', 'Ops!!! something wrong, Edit review fail, please try again!!!', true);
                     }
                 });
             }

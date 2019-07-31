@@ -1,4 +1,5 @@
-const host = 'http://localhost:8080';
+// const host = 'https://9af009a5.ngrok.io';
+    const host = 'http://localhost:8080';
 let isLogin = false;
 
 async function checkLogin(referenceUrl = null) {

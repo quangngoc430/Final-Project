@@ -7,7 +7,7 @@
     <title>Signup</title>
 
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link th:href="@{/css/index.css}" rel="stylesheet">
 </head>
 <body>
@@ -83,13 +83,13 @@
                 data: account,
                 contentType: 'application/json',
                 success: function (data) {
-                    changeAndShowModalValue('Thành công', 'Tạo tài khoản thành công.', false);
+                    changeAndShowModalValue('Success', 'Signup account successfully, please check email to activate account.', false);
                 },
                 error: function (error) {
                     if (error.status) {
-                        changeAndShowModalValue('Lỗi', 'Email đã tồn tại', true);
+                        changeAndShowModalValue('Error', 'Email is exist', true);
                     } else {
-                        changeAndShowModalValue('Lỗi', 'Xảy ra lỗi, mời thử lại', true);
+                        changeAndShowModalValue('Error', 'Ops!!! something wrong, try again!!!', true);
                     }
                 }
             });
@@ -117,7 +117,7 @@
                         required: true,
                         minlength: 8,
                         maxlength: 40,
-                        regex: /^[a-zA-Z0-9._]+\@gmail.com/
+                        regex: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
                     },
                     password: {
                         required: true,
@@ -139,13 +139,13 @@
                         required: 'Please input email',
                             minlength: 'Minimum 8 characters required',
                             maxlength: 'Maximum 40 characters required',
-                            regex: 'Email must have template ^[a-zA-Z0-9._]+\\@gmail.com'
+                            regex: 'Error format email'
                     },
                     password: {
                         required: 'Please input password',
                             minlength: 'Minimum 8 characters required',
                             maxlength: 'Maximum 40 characters required',
-                            regex: 'Email must have template ^[a-zA-Z0-9]+'
+                            regex: 'Password contains only uppercase, lowercase and number'
                     },
                     rePassword: {
                         equalTo: 'Confirm password must be the same password'

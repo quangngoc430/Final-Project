@@ -1,4 +1,10 @@
+// const host = 'https://236fcc17.ngrok.io';
 const host = 'http://localhost:8080';
+
+const STATUS_ACTIVE_ACCOUNT = 0;
+const STATUS_DEACTIVE_ACCOUNT = 1;
+const STATUS_DELETE_ACCOUNT = 2;
+
 let isLogin = false;
 
 async function checkLogin(referenceUrl = null) {

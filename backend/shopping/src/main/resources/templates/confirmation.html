@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> Biker.vn - For Biker Lover </title>
+    <title> Confirmation </title>
 
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -65,7 +65,7 @@
 					</table>
 				</div>
 				<div class="row mt-5">
-					<a class="btn btn-primary offset-3 col-md-6" style="color: #fff;" id="btnCheckout">Thanh toán</a>
+					<a class="btn btn-primary offset-3 col-md-6" style="color: #fff;" id="btnCheckout">Finish</a>
 				</div>
 			</div>
         </div>
@@ -241,10 +241,10 @@
 				data: JSON.stringify(data),
 				contentType: 'application/json',
 				success: function (dataReturn) {
-					changeAndShowModalValue('Thành công', 'Đặt hàng thành công', false, 'redirectToHomePage()', 'Quay lại trang chủ');
+					changeAndShowModalValue('Success', 'Order successfully', false, 'redirectToHomePage()', 'Return to homepage');
 				},
 				error: function (error) {
-					changeAndShowModalValue('Lỗi', 'Có lỗi xảy ra, bạn vui lòng thử lại hoặc kiểm trả số lượng hàng!!!', true);
+					changeAndShowModalValue('Error', 'Ops!!! something wrong, try again or check numbers of items!!!', true);
 				}
 			});
 		}

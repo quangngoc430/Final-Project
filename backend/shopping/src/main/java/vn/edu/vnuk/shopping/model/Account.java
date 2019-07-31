@@ -35,7 +35,7 @@ public class Account implements Serializable {
 
     @JsonView(View.Public.class)
     @NotEmpty(message = "email is not empty", groups = {GroupCreateAccount.class, GroupLoginAccount.class})
-    @Email(regexp = "^[a-zA-Z0-9._]+\\@gmail.com", message = "email contains [a-z|A-Z|0-9|.|_] and end with @gmail.com",
+    @Email(regexp = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", message = "email contains [a-z|A-Z|0-9|.|_]",
             groups = {GroupCreateAccount.class, GroupLoginAccount.class})
     @Size(min = 8, max = 80, message = "email must have between 8 and 80 characters",
             groups = {GroupCreateAccount.class, GroupLoginAccount.class, Default.class})
