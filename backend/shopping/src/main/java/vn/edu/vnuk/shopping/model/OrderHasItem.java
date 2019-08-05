@@ -39,7 +39,7 @@ public class OrderHasItem {
 
     @NotNull
     @Column(name = "Price")
-    private Long price;
+    private Integer price;
 
     @Column(name = "CreatedAt")
     private Date createdAt;
@@ -78,11 +78,11 @@ public class OrderHasItem {
         this.quantity = quantity;
     }
 
-    public Long getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

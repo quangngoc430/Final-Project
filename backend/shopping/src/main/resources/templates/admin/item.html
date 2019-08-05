@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>User info</title>
+    <title>Admin | Item</title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -113,8 +113,8 @@
 
         /*]]>*/
 
-        $(document).ready(() => {
-            checkLogin();
+        $(document).ready(async () => {
+            await checkLogin();
 
             if (itemId) {
                 $('#btnSubmit').text('Update');

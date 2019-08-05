@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin | Order</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/adminManage.css}">
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+    <script th:src="@{/js/adminMain.js}"></script>
+</head>
+<body>
+
+<style>
+    span.error {
+        color: red;
+        font-style: italic;
+        font-size: 12px;
+    }
+</style>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <div th:insert="admin/sidebar :: sidebar"></div>
+
+    <!--        <div th:replace="modal :: modal"></div>-->
+
+    <!-- Page Content  -->
+    <div id="content">
+        <div class="container">
+            <div style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+                <h2 class="text-center mb-5">Order items</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" class="text-center">Product</th>
+                            <th scope="col" class="text-center">Quantity</th>
+                            <th scope="col" class="text-center">Price</th>
+                            <th scope="col" class="text-center">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-order-items">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="background-color: #fff; margin: 40px 0px; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); padding: 40px 40px;">
+                <h2 class="text-center">Order address</h2>
+                <form class="row" action="javascript:void(0);">
+                    <div class="col-md-6 offset-3">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" class="form-control name" readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" class="form-control email" readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="text" id="phone" class="form-control phone" readonly/>
+                        </div>
+                        <div class="formt-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" class="form-control address" readonly/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    const orderId = /*[[${id}]]*/ null;
+
+    /*]]>*/
+
+    $(document).ready(async () => {
+        await checkLogin();
+
+        let url = host + '/api/order-has-item?orderId=' + orderId + '&accessToken=' + window.localStorage.getItem('accessToken');
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (orderHasItemsResutl) {
+
+                let totalPrice = 0;
+
+                for (let orderHasItem of orderHasItemsResutl.content) {
+                    totalPrice = totalPrice + Number(orderHasItem.quantity) * Number(orderHasItem.item.price);
+                    $('#table-order-items').append(generateOrderHasItem(orderHasItem));
+                }
+
+                let totalTemplate = `
+                    <tr>
+                        <td colspan="3"><h4 class="ml-5">Total</h4></td>
+                        <td>
+                            <p style="margin-bottom: 0px !important;">
+                                <span class="product-price-total">${totalPrice}</span>đ
+                            </p>
+                        </td>
+                    </tr>`;
+
+                $('#table-order-items').append(totalTemplate);
+
+                pricesWithCommas('.product-price');
+                pricesWithCommas('.product-price-total');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        url = host + '/api/orders/' + orderId + '?accessToken=' + window.localStorage.getItem('accessToken');
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (orderResult) {
+
+                $('#name').val(orderResult.orderAddress.fullname);
+                $('#email').val(orderResult.orderAddress.email);
+                $('#phone').val(orderResult.orderAddress.phone);
+                $('#address').val(orderResult.orderAddress.address);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    function generateOrderHasItem(orderHasItem) {
+        return `<tr>
+                    <td>
+                        <div class="media row align-items-center ml-3">
+                            <div class="d-flex">
+                                <a href="${host + '/item/' + orderHasItem.item.id}"><img style="height: 150px; width: 150px;" src="${orderHasItem.item.primaryImageURL}"></a>
+                            </div>
+                            <div class="media-body ml-3">
+                                <a href="${host + '/item/' + orderHasItem.item.id}"><p style="vertical-align: middle;">${orderHasItem.item.name}</p></a>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="align-middle text-center">${orderHasItem.quantity}</td>
+                    <td class="align-middle text-center"><p style="margin-bottom: 0px !important;"><span class="product-price">${orderHasItem.item.price}</span>đ</p></td>
+                    <td class="align-middle text-center"><p style="margin-bottom: 0px !important;"><span class="product-price-total">${Number(orderHasItem.quantity) * Number(orderHasItem.item.price)}</span>đ</p></td>
+                </tr>`;
+    }
+
+    function pricesWithCommas(selector) {
+        let prices = $(selector);
+        for (let index = 0; index < prices.length; index ++) {
+            price = prices[index];
+            priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            price.textContent = priceContent;
+        }
+    }
+</script>
+</body>
+</html>

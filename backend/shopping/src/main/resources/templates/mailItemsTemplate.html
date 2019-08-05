@@ -1,18 +1,61 @@
 <!DOCTYPE html>
-    <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head></head>
-    <body>
-        <table style="width:100%">
-            <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Name</th>
-            </tr>
-            <tr th:each="orderHasItem : ${orderHasItems}">
-                <td th:text="${orderHasItem.item.id}"></td>
-                <td><img th:src="${orderHasItem.item.imageURLs}"/></td>
-                <td th:text="${orderHasItem.item.name}"></td>
-            </tr>
-        </table>
-    </body>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid #dee2e6;
+            font-size: 1rem;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+    </style>
+</head>
+<body>
+<h2>User infomation</h2>
+<table style="border-spacing: 0px; margin-bottom: 30px;">
+    <tr style="border-bottom: 1px solid #dee2e6;">
+        <td>Email</td>
+        <td th:text="${orderAddress.email}"></td>
+    </tr>
+    <tr style="border-bottom: 1px solid #dee2e6;">
+        <td>Fullname</td>
+        <td th:text="${orderAddress.fullname}"></td>
+    </tr>
+    <tr style="border-bottom: 1px solid #dee2e6;">
+        <td>Phone</td>
+        <td th:text="${orderAddress.phone}"></td>
+    </tr>
+    <tr style="border-bottom: 1px solid #dee2e6;">
+        <td>Address</td>
+        <td th:text="${orderAddress.address}"></td>
+    </tr>
+</table>
+
+<table style="width:100%; text-align: center; border-spacing: 0px;">
+    <tr>
+        <th style="padding: .75rem; background-color: #343a40; color: #fff;">#</th>
+        <th style="padding: .75rem; background-color: #343a40; color: #fff;">Image</th>
+        <th style="padding: .75rem; background-color: #343a40; color: #fff;">Name</th>
+        <th style="padding: .75rem; background-color: #343a40; color: #fff;">Quantity</th>
+        <th style="padding: .75rem; background-color: #343a40; color: #fff;">Price</th>
+    </tr>
+    <tr th:each="orderHasItem : ${orderHasItems}" style="border-bottom: 1px solid #dee2e6;">
+        <td th:text="${orderHasItem.item.id}"></td>
+        <td><img th:src="${#strings.replace(orderHasItem.item.imageURLs, 'http://localhost:8081', imageHost)}" style="width: 150px; height: 150px;"/></td>
+        <td><a th:href="${host} + '/item/' + ${orderHasItem.itemId}" th:text="${orderHasItem.item.name}"></a></td>
+        <td th:text="${orderHasItem.quantity}"></td>
+        <td th:text="${orderHasItem.price}"></td>
+    </tr>
+    <tr>
+        <td colspan="4">Total</td>
+        <td th:text="${total}"></td>
+    </tr>
+</table>
+
+
+</body>
 </html>

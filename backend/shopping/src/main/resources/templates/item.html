@@ -203,6 +203,7 @@
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
     <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/timeAgo.js}"></script>
     <script th:src="@{/js/cart.js}"></script>
 
     <script th:inline="javascript">
@@ -403,7 +404,7 @@
                 </a>
                 <div class="media-body">
                     <span class="text-muted float-right">
-                        <small class="text-muted" class="rating-time-ago">30 min ago</small>
+                        <small class="text-muted" class="rating-time-ago">${timeSince(new Date(rating.updatedAt))}</small>
                     </span>
                     <strong class="text-success">${rating.account.email}</strong>
                     <p id="rating-comment-${rating.id}">${rating.comment}</p>

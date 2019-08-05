@@ -12,29 +12,49 @@
 </head>
 <body>
 
-<style>
-    span.error {
-        color: red;
-        font-style: italic;
-        font-size: 12px;
-    }
-</style>
+    <style>
+        span.error {
+            color: red;
+            font-style: italic;
+            font-size: 12px;
+        }
+    </style>
 
-<!-- header -->
-<div th:insert="header :: header"></div>
+    <!-- header -->
+    <div th:insert="header :: header"></div>
 
-<div th:replace="modal :: modal"></div>
+    <div th:replace="modal :: modal"></div>
 
-<h1 th:if="${isSuccess}">SUCCESS</h1>
-<h1 th:unless="${isSuccess}">FAIL</h1>
+    <div th:if="${isSuccess}" class="row my-5">
+        <div class="col-6 offset-3 p-5" style="background-color: #fff; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); border-radius: 5px">
+            <h1>Hi, <span th:text="${fullname}"></span></h1>
+            <p>Your account has been activated.</p>
+            <p>To log in when visitng our site just clikc <a th:href="@{/login}">Login</a>, and then enter your e-mail address and password.</p>
 
-<!-- Footer -->
-<div th:insert="footer :: footer"></div>
+            <p>If you have any questions about your account or any other matter, please feel free to contact us at support@techshop.com or by phone at.</p>
+        </div>
+    </div>
+
+    <div  th:unless="${isSuccess}" class="row my-5">
+        <div class="col-6 offset-3 p-5" style="background-color: #fff; box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.07); border-radius: 5px">
+            <h1>Ops!!!, Have something wrong</h1>
+            <p>Please try again or contact with admin to solve it.</p>
+            <p>If you have any questions about your account or any other matter, please feel free to contact us at support@techshop.com or by phone at.</p>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div th:insert="footer :: footer"></div>
 
 <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
 <script th:src="@{/js/popper.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 <script th:src="@{/js/main.js}"></script>
+
+<script>
+    $(document).ready(async function () {
+        await checkLogin();
+    });
+</script>
 </body>
 </html>

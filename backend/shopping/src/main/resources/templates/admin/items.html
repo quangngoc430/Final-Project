@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Collapsible sidebar using Bootstrap 4</title>
+    <title>Admin | Items</title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -96,7 +96,9 @@
         let sort = 'id,asc';
         let size = 10;
 
-        $(document).ready(() => {
+        $(document).ready(async () => {
+            await checkLogin();
+
             const queryParams = $(location).attr('search').replace('?', '').split('&');
             let params = {};
 
@@ -237,7 +239,7 @@
                         </td>
                         <td>
                             <a href="${host}/admin/item/${item.id}" style="color: #ffc107; font-size: 30px;"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                            <a href="javascript:void(0);" onclick="deleteItem(${item.id})" style="color: #dc3545; font-size: 30px; margin-left: 2px;"><i class="fa fa-trash" aria-hidden="true"></i></a>
+<!--                            <a href="javascript:void(0);" onclick="deleteItem(${item.id})" style="color: #dc3545; font-size: 30px; margin-left: 2px;"><i class="fa fa-trash" aria-hidden="true"></i></a>-->
                         </td>
                     </tr>`;
 

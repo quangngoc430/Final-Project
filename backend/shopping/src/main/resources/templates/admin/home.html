@@ -27,29 +27,208 @@
         <!-- Page Content  -->
         <div id="content">
             <div class="container">
-                <div class="main">
-                    <p>Titles, images, prices, product descriptions and related information must be consistent, correct and spelled correctly. As follows:</p>
-                    <ul>
-                        1 / Product images
-                        <li>Product images must be clear photos, product status details. Do not leave images or information unrelated to this product such as shop referral information, contact information or payment information.</li>
-                        <li>There must be at least one real image of the product taken by the Seller himself. In this picture, the real product area must occupy at least 40% of the total area of ​​the image.</li>
-                        <li>Absolutely not post nude, sexy, disgusting images that are not suitable for fine traditions.</li>
-                    </ul>
-                    <ul>
-                        2 / Product name
-                        <li>The product name must have enough characters, clear meanings, no special characters, no abbreviations.</li>
-                        <li>If it is a product set, the product name must specify the Combo / Set of products</li>
-                        <li>The name of the product must match the information on the product image.</li>
-                        <li>Does not contain fake / fake keywords or similar keywords</li>
-                    </ul>
+                <div style="padding: 40px 0px;">
+                    <h1 class="text-center mb-5">Analysic</h1>
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>Overall</h4>
+                        </div>
+                        <div class="col-3">
+                            <div class="py-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-info text-center mb-3 product-price" id="total-profit" th:text="${profit}"></h5>
+                                <h3 class="text-center">Profit</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="py-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-danger text-center mb-3" id="total-users" th:text="${usersCount}"></h5>
+                                <h3 class="text-center">Users</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="py-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-primary text-center mb-3" id="total-orders" th:text="${ordersCount}"></h5>
+                                <h3 class="text-center">Orders</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="py-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-info text-center mb-3" id="total-feedbacks" th:text="${feedbacksCount}"></h5>
+                                <h3 class="text-center">Feedback</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Profit</h4>
+                        </div>
+                        <div class="col-4">
+                            <div class="py-1 mb-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-info text-center mb-3 product-price" id="profit-day" th:text="${today}"></h5>
+                                <h3 class="text-center">Today</h3>
+                            </div>
+
+                            <div class="py-1 mb-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-danger text-center mb-3 product-price" id="profit-month" th:text="${month}"></h5>
+                                <h3 class="text-center">Month</h3>
+                            </div>
+
+                            <div class="py-1 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-primary text-center mb-3 product-price" id="profit-year" th:text="${year}"></h5>
+                                <h3 class="text-center">Year</h3>
+                            </div>
+                        </div>
+
+                        <canvas class="col-8" id="line-chart-profit"></canvas>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Orders</h4>
+                        </div>
+                        <div class="col-4">
+                            <div class="py-1 mb-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-info text-center mb-3" id="orders-day" th:text="${ordersToday}"></h5>
+                                <h3 class="text-center">Today</h3>
+                            </div>
+
+                            <div class="py-1 mb-3 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-danger text-center mb-3" id="orders-month" th:text="${ordersMonth}"></h5>
+                                <h3 class="text-center">Month</h3>
+                            </div>
+
+                            <div class="py-1 border rounded" style="background-color: #fff;">
+                                <h5 class="value text-primary text-center mb-3" id="orders-year" th:text="${ordersYear}"></h5>
+                                <h3 class="text-center">Year</h3>
+                            </div>
+                        </div>
+
+                        <canvas class="col-8" id="line-chart-orders"></canvas>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <h4>Account</h4>
+                            <canvas id="line-chart-new-account"></canvas>
+                        </div>
+
+
+                        <div class="col-6">
+                            <h4>Feedback</h4>
+                            <canvas id="bar-chart"></canvas>
+                        </div>
+
+                    </div>
+
+
                 </div>
             </div>
-            
-                    
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
 
+        const ratings = /*[[${ratings}]]*/ null;
+        const profits = /*[[${profits}]]*/ null;
+        const accounts = /*[[${accounts}]]*/ null;
+        const orders = /*[[${orders}]]*/ null;
+        /*]]>*/
+
+        new Chart(document.getElementById("bar-chart"), {
+            type: 'bar',
+            data: {
+                labels: ["1 star", "2 stars", "3 stars", "4 stars", "5 stars"],
+                datasets: [
+                    {
+                        label: "Vote",
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                        data: ratings
+                    }
+                ]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Feedback of users'
+                }
+            }
+        });
+
+        new Chart(document.getElementById("line-chart-profit"), {
+            type: 'line',
+            data: {
+                labels: ['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    data: profits,
+                    label: "Profit (VND)",
+                    borderColor: "#3e95cd",
+                    fill: false
+                }]
+            },
+            options: {
+                title: {
+                    display: true
+                }
+            }
+        });
+
+        new Chart(document.getElementById("line-chart-orders"), {
+            type: 'line',
+            data: {
+                labels: ['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    data: orders,
+                    label: "Orders (order)",
+                    borderColor: "#3cba9f",
+                    fill: false
+                }]
+            },
+            options: {
+                title: {
+                    display: true
+                }
+            }
+        });
+
+        new Chart(document.getElementById("line-chart-new-account"), {
+            type: 'line',
+            data: {
+                labels: ['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    data: accounts,
+                    label: "New Account (Acc)",
+                    borderColor: "#c45850",
+                    fill: false
+                }]
+            },
+            options: {
+                title: {
+                    display: false
+                }
+            }
+        });
+
+        $(document).ready(async () => {
+            await checkLogin();
+            pricesWithCommas('.product-price');
+        });
+
+        function pricesWithCommas(selector) {
+            let prices = $(selector);
+            for (let index = 0; index < prices.length; index ++) {
+                price = prices[index];
+                priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                price.textContent = priceContent;
+            }
+        }
+    </script>
 </body>
 
 </html>

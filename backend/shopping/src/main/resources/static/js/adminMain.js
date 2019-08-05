@@ -2,6 +2,10 @@
     const host = 'http://localhost:8080';
 let isLogin = false;
 
+const blackList = ['/account',
+                   '/item',
+                   '/order'];
+
 async function checkLogin(referenceUrl = null) {
     try {
         const token = await $.ajax({
@@ -31,6 +35,18 @@ async function checkLogin(referenceUrl = null) {
     } catch (error) {
         $('#nav-signin').attr("hidden", false);
         $('#nav-signup').attr("hidden", false);
+
+        for (let url of blackList) {
+            if (window.location.href.includes(url)) {
+                window.location.href = host + '/admin/login';
+                return;
+            }
+        }
+
+        if (window.location.href.endsWith('/admin')) {
+            window.location.href = host + '/admin/login';
+            return;
+        }
 
         return false;
     }

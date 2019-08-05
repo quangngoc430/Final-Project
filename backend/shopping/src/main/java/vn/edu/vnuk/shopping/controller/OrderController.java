@@ -46,16 +46,15 @@ public class OrderController {
     }
 
     @GetMapping(value = "/api/orders", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> getAll(@RequestParam("accountId") Long accountId,
+    public ResponseEntity<?> getAll(@RequestParam(name = "accountId", required = false) Long accountId,
                                     @RequestParam("accessToken") String accessToken,
                                     Pageable pageable,
                                     HttpServletRequest request) throws TokenIsExpiredException, AccountNotFoundException, TokenNotFoundException, UnauthorizedException {
         commonService.authenticate(accessToken, request);
 
-        if (accountId == null)
+        if (accountId != null)
             return new ResponseEntity<>(orderService.getAllByAccountId(accountId, pageable), HttpStatus.OK);
         return new ResponseEntity<>(orderService.getAll(pageable), HttpStatus.OK);
     }
-
 
 }

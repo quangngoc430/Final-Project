@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Admin | Orders</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/adminManage.css}">
+</head>
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <div th:insert="admin/sidebar :: sidebar"></div>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="form-group col-md-3 row">
+                    <label for="size" class="col-md-4 my-auto">Size : </label>
+                    <select class="form-control col-md-8 custom-select" name="size" id="size">
+                        <option value="6">6</option>
+                        <option value="9">9</option>
+                        <option value="12">12</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4 row">
+                    <label for="sort" class="col-md-3 my-auto">Sort : </label>
+                    <select class="form-control col-md-9 custom-select" name="sort" id="sort">
+                        <option value="id,asc">ID (ascending)</option>
+                        <option value="id,desc">ID (descending)</option>
+                        <option value="updatedAt,asc">Newest</option>
+                        <option value="updatedAt,desc">Oldest</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" class="text-center">ID</th>
+                            <th scope="col" class="text-center">Address</th>
+                            <th scope="col" class="text-center">Date</th>
+                            <th scope="col" class="text-center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-checkouts">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <nav aria-label="navigation mb-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" id="btnPrevious"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);"><span id="currentPage"></span> / <span id="totalPages"></span></a></li>
+                    <li class="page-item" id="btnNext"><a class="page-link" href="javascript:void(0);">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminMain.js}"></script>
+
+<script>
+    let currentPage = 0;
+    let totalPages = 0;
+    let sort = 'id,asc';
+    let size = 6;
+
+    $(document).ready(async () => {
+        await checkLogin();
+        pricesWithCommas('.product-price');
+
+        const queryParams = $(location).attr('search').replace('?', '').split('&');
+        let params = {};
+
+        for (let queryParam of queryParams) {
+            queryParam = queryParam.split('=');
+            const key = queryParam[0];
+            const value = queryParam[1];
+
+            params[key] = value;
+        }
+
+        page = (params.hasOwnProperty('page')) ? params.page : 0;
+        currentPage = page;
+        size = (params.hasOwnProperty('size')) ? params.size : 6;
+        sort = (params.hasOwnProperty('sort')) ? params.sort : 'id,asc';
+
+        $('#sort').val(sort);
+        $('#size').val(size);
+
+        searchOrders();
+    });
+
+    $('#btnPrevious').click(() => {
+        if ($('#btnPrevious').hasClass('disabled')) return;
+        currentPage = currentPage - 1;
+
+        searchOrders();
+    });
+
+    $('#btnNext').click(() => {
+        if ($('#btnNext').hasClass('disabled')) return;
+
+        currentPage = currentPage + 1;
+
+        searchOrders();
+    });
+
+    $('#size').change(() => {
+        size = $('#size').val();
+        searchOrders();
+    });
+
+    $('#sort').change(() => {
+        sort = $('#sort').val();
+        searchOrders();
+    });
+
+    function rewriteUrl() {
+        const url = host + '/admin/orders?page=' + currentPage + '&size=' + size + '&sort=' + sort;
+
+        history.replaceState(history.state, $(document).title, url);
+    }
+
+    function searchOrders() {
+
+        const url = host + '/api/orders?page=' + currentPage + '&size=' + size + '&sort=' + sort + '&accessToken=' + window.localStorage.adminAccessToken;
+
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (orders) {
+                console.log(orders);
+                $('#table-checkouts').html("");
+
+                for (let order of orders.content) {
+                    $('#table-checkouts').append(generateOrder(order));
+                }
+                $('#btnPrevious').removeClass('disabled');
+                $('#btnNext').removeClass('disabled');
+
+                if (orders.first)
+                    $('#btnPrevious').addClass('disabled');
+
+                if (orders.last)
+                    $('#btnNext').addClass('disabled');
+
+                currentPage = Number(orders.number);
+                totalPages = Number(orders.totalPages);
+                $('#currentPage').text(currentPage + 1);
+                $('#totalPages').text(totalPages);
+
+                pricesWithCommas();
+
+                rewriteUrl(page, size, sort);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function generateOrder(order) {
+        let orderDate = new Date(Number(order.updatedAt));
+        let updatedAt = `${orderDate.getHours()}:${orderDate.getMinutes()}:${orderDate.getSeconds()}  ${orderDate.getDate()}-${orderDate.getMonth() + 1}-${orderDate.getFullYear()}`;
+        return `<tr>
+                <td class="text-center"><a href="${host + '/admin/order/' + order.id}">#${order.id}</a></td>
+                <td class="text-center">${order.orderAddress.address}</td>
+                <td class="text-center">${updatedAt}</td>
+                <td class="text-center"><a href="${host}/admin/order/${order.id}" class="text-primary" style="font-size: 30px;"><i class="fa fa-eye"></i></a></td>
+            </tr>`;
+    }
+
+    function pricesWithCommas(selector) {
+        let prices = $(selector);
+        for (let index = 0; index < prices.length; index ++) {
+            price = prices[index];
+            priceContent = price.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            price.textContent = priceContent;
+        }
+    }
+</script>
+</body>
+
+</html>
